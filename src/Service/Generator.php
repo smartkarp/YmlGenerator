@@ -325,6 +325,10 @@ final class Generator
     {
         foreach ($shopInfo->toArray() as $name => $value) {
             if ($value !== null) {
+                if (is_bool($value)) {
+                    $value = $value ? 'true' : 'false';
+                }
+
                 $this->writer->writeElement($name, $value);
             }
         }

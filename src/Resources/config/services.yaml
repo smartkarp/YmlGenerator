@@ -1,4 +1,6 @@
 services:
-    defaults:
+    _defaults:
         autowire: true
         autoconfigure: true
+
+    Smartkarp\Bundle\YmlGeneratorBundle\Service\Generator: ~

@@ -32,7 +32,7 @@ final class OfferTourGeneratorTest extends AbstractGeneratorTest
             ->setRegion($this->faker->name)
             ->addDataTour($this->faker->date("Y-m-d\TH:i"))
             ->setName($this->faker->name)
-            ->setHotelStars($this->faker->name)
+            ->setHotelStars($this->faker->randomFloat(2))
             ->setRoom($this->faker->name)
             ->setMeal($this->faker->name);
     }

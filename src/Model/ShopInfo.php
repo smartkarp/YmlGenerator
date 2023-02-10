@@ -138,15 +138,32 @@ final class ShopInfo
 
     public function toArray(): array
     {
-        return [
-            'name'                  => $this->getName(),
-            'company'               => $this->getCompany(),
-            'url'                   => $this->getUrl(),
-            'platform'              => $this->getPlatform(),
-            'version'               => $this->getVersion(),
-            'agency'                => $this->getAgency(),
-            'email'                 => $this->getEmail(),
-            'enable_auto_discounts' => $this->getAutoDiscount(),
+        $data = [
+            'name'    => $this->getName(),
+            'company' => $this->getCompany(),
+            'url'     => $this->getUrl(),
         ];
+
+        if ($this->getPlatform() !== null) {
+            $data['platform'] = $this->getPlatform();
+        }
+
+        if ($this->getVersion() !== null) {
+            $data['version'] = $this->getVersion();
+        }
+
+        if ($this->getAgency() !== null) {
+            $data['agency'] = $this->getAgency();
+        }
+
+        if ($this->getEmail() !== null) {
+            $data['email'] = $this->getEmail();
+        }
+
+        if ($this->getAutoDiscount() !== null) {
+            $data['enable_auto_discounts'] = $this->getAutoDiscount();
+        }
+
+        return $data;
     }
 }

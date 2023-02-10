@@ -168,7 +168,8 @@ abstract class AbstractGeneratorTest extends TestCase
         $root = 'yml_catalog';
 
         $ymlFile = new DOMDocument();
-        $ymlFile->loadXML(file_get_contents($this->settings->getOutputFile()));
+        $fileGetContents = file_get_contents($this->settings->getOutputFile());
+        $ymlFile->loadXML($fileGetContents);
 
         $creator = new DOMImplementation();
         $ymlFileWithDtd = $creator->createDocument(null, null, $creator->createDocumentType($root, null, $systemId));
