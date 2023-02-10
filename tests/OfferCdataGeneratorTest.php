@@ -2,7 +2,7 @@
 
 namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-use Smartkarp\Bundle\YmlGeneratorBundle\Cdata;
+use Smartkarp\Bundle\YmlGeneratorBundle\Service\Cdata;
 use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferSimple;

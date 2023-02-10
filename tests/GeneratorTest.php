@@ -2,9 +2,9 @@
 
 namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-use Smartkarp\Bundle\YmlGeneratorBundle\Generator;
+use Smartkarp\Bundle\YmlGeneratorBundle\Service\Generator;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
-use Smartkarp\Bundle\YmlGeneratorBundle\Settings;
+use Smartkarp\Bundle\YmlGeneratorBundle\Service\Settings;
 use Faker\Factory as Faker;
 use Faker\Generator as FakerGenerator;
 use PHPUnit\Framework\TestCase;

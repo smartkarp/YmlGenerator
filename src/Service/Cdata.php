@@ -1,6 +1,6 @@
 <?php
 
-namespace Smartkarp\Bundle\YmlGeneratorBundle;
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Service;
 
 final class Cdata
 {

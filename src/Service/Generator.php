@@ -1,6 +1,6 @@
 <?php
 
-namespace Smartkarp\Bundle\YmlGeneratorBundle;
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Service;
 
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Category;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Currency;
