@@ -1,235 +1,152 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model;
 
-namespace Bukashk0zzz\YmlGenerator\Model;
-
-/**
- * Class ShopInfo
- */
-class ShopInfo
+final class ShopInfo
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $agency;
 
-    /**
-     * @var string
-     */
-    private $company;
+    private ?bool $autoDiscount;
 
-    /**
-     * @var string
-     */
-    private $url;
+    private string $company;
 
-    /**
-     * @var string
-     */
-    private $platform;
+    private ?string $email;
 
-    /**
-     * @var string
-     */
-    private $version;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $agency;
+    private ?string $platform;
 
-    /**
-     * @var string
-     */
-    private $email;
+    private string $url;
 
-    /**
-     * @var bool
-     */
-    private $autoDiscount;
+    private ?string $version;
 
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            'name' => $this->getName(),
-            'company' => $this->getCompany(),
-            'url' => $this->getUrl(),
-            'platform' => $this->getPlatform(),
-            'version' => $this->getVersion(),
-            'agency' => $this->getAgency(),
-            'email' => $this->getEmail(),
-            'enable_auto_discounts' => $this->getAutoDiscount(),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return ShopInfo
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
-    /**
-     * @param string $company
-     *
-     * @return ShopInfo
-     */
-    public function setCompany($company)
-    {
+    public function __construct(
+        string  $company,
+        string  $name,
+        string  $url,
+        ?string $agency = null,
+        ?bool   $autoDiscount = null,
+        ?string $email = null,
+        ?string $platform = null,
+        ?string $version = null,
+    ) {
+        $this->agency = $agency;
+        $this->autoDiscount = $autoDiscount;
         $this->company = $company;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return ShopInfo
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlatform()
-    {
-        return $this->platform;
-    }
-
-    /**
-     * @param string $platform
-     *
-     * @return ShopInfo
-     */
-    public function setPlatform($platform)
-    {
+        $this->email = $email;
+        $this->name = $name;
         $this->platform = $platform;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * @param string $version
-     *
-     * @return ShopInfo
-     */
-    public function setVersion($version)
-    {
+        $this->url = $url;
         $this->version = $version;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAgency()
+    public function getAgency(): ?string
     {
         return $this->agency;
     }
 
-    /**
-     * @param string $agency
-     *
-     * @return ShopInfo
-     */
-    public function setAgency($agency)
+    public function setAgency(?string $agency): self
     {
         $this->agency = $agency;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getAutoDiscount(): ?bool
+    {
+        return $this->autoDiscount;
+    }
+
+    public function setAutoDiscount(?bool $autoDiscount): self
+    {
+        $this->autoDiscount = $autoDiscount;
+
+        return $this;
+    }
+
+    public function getCompany(): string
+    {
+        return $this->company;
+    }
+
+    public function setCompany(string $company): self
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     *
-     * @return ShopInfo
-     */
-    public function setEmail($email)
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getAutoDiscount()
+    public function getName(): string
     {
-        return $this->autoDiscount;
+        return $this->name;
     }
 
-    /**
-     * @param bool $autoDiscount
-     *
-     * @return ShopInfo
-     */
-    public function setAutoDiscount($autoDiscount)
+    public function setName(string $name): self
     {
-        $this->autoDiscount = $autoDiscount;
+        $this->name = $name;
 
         return $this;
+    }
+
+    public function getPlatform(): ?string
+    {
+        return $this->platform;
+    }
+
+    public function setPlatform(?string $platform): self
+    {
+        $this->platform = $platform;
+
+        return $this;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function getVersion(): ?string
+    {
+        return $this->version;
+    }
+
+    public function setVersion(?string $version): self
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name'                  => $this->getName(),
+            'company'               => $this->getCompany(),
+            'url'                   => $this->getUrl(),
+            'platform'              => $this->getPlatform(),
+            'version'               => $this->getVersion(),
+            'agency'                => $this->getAgency(),
+            'email'                 => $this->getEmail(),
+            'enable_auto_discounts' => $this->getAutoDiscount(),
+        ];
     }
 }

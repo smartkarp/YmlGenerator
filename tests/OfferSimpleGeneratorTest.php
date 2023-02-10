@@ -1,47 +1,35 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferSimple;
 
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
-
-/**
- * Generator test
- */
-class OfferSimpleGeneratorTest extends AbstractGeneratorTest
+final class OfferSimpleGeneratorTest extends AbstractGeneratorTest
 {
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'Simple';
         $this->runGeneratorTest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferSimple())
-            ->setName($this->faker->name)
+        return (new OfferSimple(
+            categoryId: 999,
+            currencyId: CurrencyEnum::RUB,
+            id: $this->faker->name,
+            name: $this->faker->name,
+            price: $this->faker->randomFloat(2),
+            url: $this->faker->url
+        ))
             ->setVendor($this->faker->company)
             ->setVendorCode(null)
             ->setPickup(true)
             ->setGroupId($this->faker->numberBetween())
             ->addPicture('http://example.com/example.jpeg')
             ->addBarcode($this->faker->ean13)
-            ->setCategoriesId([1, 2, 3])
-            ->setCategoryId(999)
-        ;
+            ->setCategoriesId([1, 2, 3]);
     }
 }

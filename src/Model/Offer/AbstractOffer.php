@@ -1,871 +1,117 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Delivery;
+use Symfony\Component\Validator\Constraints\Length;
+use function array_merge;
+use function count;
+use function implode;
+use function round;
 
-use Bukashk0zzz\YmlGenerator\Model\Delivery;
-
-/**
- * Abstract Class Offer
- */
 abstract class AbstractOffer implements OfferInterface
 {
-    /**
-     * @var string
-     */
-    private $id;
+    protected ?bool $adult = null;
 
-    /**
-     * @var bool
-     */
-    private $available;
+    protected ?bool $autoDiscount = null;
 
-    /**
-     * @var string
-     */
-    private $url;
+    protected ?bool $available = null;
 
-    /**
-     * @var float
-     */
-    private $price;
+    protected array $barcodes = [];
 
-    /**
-     * @var float
-     */
-    private $oldPrice;
+    protected array $categoriesId = [];
 
-    /**
-     * @var float
-     */
-    private $purchasePrice;
+    #[Length(max: 18)]
+    protected int $categoryId;
 
-    /**
-     * @var string
-     */
-    private $currencyId;
+    protected ?OfferCondition $condition = null;
 
-    /**
-     * @var int
-     */
-    private $categoryId;
+    protected ?string $countryOfOrigin = null;
 
-    /**
-     * @var array
-     */
-    private $categoriesId = [];
+    protected ?int $cpa = null;
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $marketCategory;
-
-    /**
-     * @var bool
-     */
-    private $adult;
-
-    /**
-     * @var string
-     */
-    private $salesNotes;
-
-    /**
-     * @var bool
-     */
-    private $manufacturerWarranty;
-
-    /**
-     * @var bool
-     */
-    private $pickup;
-
-    /**
-     * @var bool
-     */
-    private $downloadable;
-
-    /**
-     * @var bool
-     */
-    private $delivery;
-
-    /**
-     * @var float
-     */
-    private $localDeliveryCost;
-
-    /**
-     * @var array
-     */
-    private $deliveryOptions = [];
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var string
-     */
-    private $countryOfOrigin;
-
-    /**
-     * @var string
-     */
-    private $weight;
-
-    /**
-     * @var string
-     */
-    private $dimensions;
-
-    /**
-     * @var int
-     */
-    private $cpa;
-
-    /**
-     * @var string[]
-     */
-    private $barcodes;
-
-    /**
-     * @var array
-     */
-    private $pictures = [];
-
-    /**
-     * @var array
-     */
-    private $params = [];
-
-    /**
-     * @var bool
-     */
-    private $store;
-
-    /**
-     * @var bool
-     */
-    private $autoDiscount;
+    protected CurrencyEnum $currencyId;
 
     /**
      * Array of custom elements (element types are keys) of arrays of element values
      * There may be multiple elements of the same type
-     *
-     * @var array[]
      */
-    private $customElements;
+    protected array $customElements = [];
+
+    protected ?bool $delivery = null;
 
     /**
-     * @var OfferCondition
+     * @var Delivery[]
      */
-    private $condition;
+    protected array $deliveryOptions = [];
+
+    #[Length(max: 3000)]
+    protected ?string $description = null;
+
+    protected ?string $dimensions = null;
+
+    protected ?bool $downloadable = null;
+
+    #[Length(max: 20)]
+    protected string $id;
+
+    protected ?float $localDeliveryCost = null;
+
+    protected ?bool $manufacturerWarranty = null;
+
+    protected ?string $marketCategory = null;
+
+    protected string $name;
+
+    protected ?float $oldPrice = null;
 
     /**
-     * @return array
+     * @var OfferParam[]
      */
-    public function toArray()
-    {
-        return \array_merge($this->getHeaderOptions(), $this->getOptions(), $this->getFooterOptions());
-    }
+    protected array $params = [];
 
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    protected ?bool $pickup = null;
 
-    /**
-     * @param string $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+    protected array $pictures = [];
 
-        return $this;
-    }
+    protected float $price;
 
-    /**
-     * @return bool
-     */
-    public function isAvailable()
-    {
-        return $this->available;
-    }
+    protected ?float $purchasePrice = null;
 
-    /**
-     * @param bool $available
-     *
-     * @return $this
-     */
-    public function setAvailable($available)
-    {
-        $this->available = $available;
+    protected ?string $salesNotes = null;
 
-        return $this;
-    }
+    protected ?bool $store = null;
 
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
+    #[Length(max: 2048)]
+    protected string $url;
 
-    /**
-     * @param string $url
-     *
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
+    protected ?float $weight = null;
 
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param float $price
-     *
-     * @return $this
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getOldPrice()
-    {
-        return $this->oldPrice;
-    }
-
-    /**
-     * @param float $oldPrice
-     *
-     * @return $this
-     */
-    public function setOldPrice($oldPrice)
-    {
-        $this->oldPrice = $oldPrice;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPurchasePrice()
-    {
-        return $this->purchasePrice;
-    }
-
-    /**
-     * @param float $purchasePrice
-     *
-     * @return $this
-     */
-    public function setPurchasePrice($purchasePrice)
-    {
-        $this->purchasePrice = $purchasePrice;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrencyId()
-    {
-        return $this->currencyId;
-    }
-
-    /**
-     * @param string $currencyId
-     *
-     * @return $this
-     */
-    public function setCurrencyId($currencyId)
-    {
-        $this->currencyId = $currencyId;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
-
-    /**
-     * @param int $categoryId
-     *
-     * @return $this
-     */
-    public function setCategoryId($categoryId)
-    {
+    public function __construct(
+        int          $categoryId,
+        CurrencyEnum $currencyId,
+        string       $id,
+        string       $name,
+        float        $price,
+        string       $url,
+    ) {
         $this->categoryId = $categoryId;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCategoriesId()
-    {
-        return $this->categoriesId;
-    }
-
-    /**
-     * @param array $categoriesId
-     *
-     * @return $this
-     */
-    public function setCategoriesId(array $categoriesId)
-    {
-        $this->categoriesId = $categoriesId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
+        $this->currencyId = $currencyId;
+        $this->id = $id;
         $this->name = $name;
-
-        return $this;
+        $this->price = $price;
+        $this->url = $url;
     }
 
-    /**
-     * @return string
-     */
-    public function getMarketCategory()
-    {
-        return $this->marketCategory;
-    }
-
-    /**
-     * @param string $marketCategory
-     *
-     * @return $this
-     */
-    public function setMarketCategory($marketCategory)
-    {
-        $this->marketCategory = $marketCategory;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAdult()
-    {
-        return $this->adult;
-    }
-
-    /**
-     * @param bool $adult
-     *
-     * @return $this
-     */
-    public function setAdult($adult)
-    {
-        $this->adult = $adult;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSalesNotes()
-    {
-        return $this->salesNotes;
-    }
-
-    /**
-     * @param string $salesNotes
-     *
-     * @return $this
-     */
-    public function setSalesNotes($salesNotes)
-    {
-        $this->salesNotes = $salesNotes;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isManufacturerWarranty()
-    {
-        return $this->manufacturerWarranty;
-    }
-
-    /**
-     * @param bool $manufacturerWarranty
-     *
-     * @return $this
-     */
-    public function setManufacturerWarranty($manufacturerWarranty)
-    {
-        $this->manufacturerWarranty = $manufacturerWarranty;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPickup()
-    {
-        return $this->pickup;
-    }
-
-    /**
-     * @param bool $pickup
-     *
-     * @return $this
-     */
-    public function setPickup($pickup)
-    {
-        $this->pickup = $pickup;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDownloadable()
-    {
-        return $this->downloadable;
-    }
-
-    /**
-     * @param bool $downloadable
-     *
-     * @return $this
-     */
-    public function setDownloadable($downloadable)
-    {
-        $this->downloadable = $downloadable;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDelivery()
-    {
-        return $this->delivery;
-    }
-
-    /**
-     * @param bool $delivery
-     *
-     * @return $this
-     */
-    public function setDelivery($delivery)
-    {
-        $this->delivery = $delivery;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDeliveryOptions()
-    {
-        return $this->deliveryOptions;
-    }
-
-    /**
-     * @param Delivery $option
-     *
-     * @return $this
-     */
-    public function addDeliveryOption(Delivery $option)
-    {
-        $this->deliveryOptions[] = $option;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $store
-     *
-     * @return $this
-     */
-    public function setStore($store)
-    {
-        $this->store = $store;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStore()
-    {
-        return $this->store;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLocalDeliveryCost()
-    {
-        return $this->localDeliveryCost;
-    }
-
-    /**
-     * @param float $localDeliveryCost
-     *
-     * @return $this
-     */
-    public function setLocalDeliveryCost($localDeliveryCost)
-    {
-        $this->localDeliveryCost = $localDeliveryCost;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $description
-     *
-     * @return $this
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountryOfOrigin()
-    {
-        return $this->countryOfOrigin;
-    }
-
-    /**
-     * @param string $countryOfOrigin
-     *
-     * @return $this
-     */
-    public function setCountryOfOrigin($countryOfOrigin)
-    {
-        $this->countryOfOrigin = $countryOfOrigin;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
-    /**
-     * @param string $weight
-     *
-     * @return $this
-     */
-    public function setWeight($weight)
-    {
-        $this->weight = $weight;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDimensions()
-    {
-        return $this->dimensions;
-    }
-
-    /**
-     * @param float $length
-     * @param float $width
-     * @param float $height
-     *
-     * @return $this
-     */
-    public function setDimensions($length, $width, $height)
-    {
-        $dimensions = [
-            \round((float) $length, 3),
-            \round((float) $width, 3),
-            \round((float) $height, 3),
-        ];
-
-        $this->dimensions = \implode('/', $dimensions);
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCpa()
-    {
-        return $this->cpa;
-    }
-
-    /**
-     * @param int $cpa
-     *
-     * @return $this
-     */
-    public function setCpa($cpa)
-    {
-        $this->cpa = $cpa;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * @param OfferParam $param
-     *
-     * @return $this
-     */
-    public function addParam(OfferParam $param)
-    {
-        $this->params[] = $param;
-
-        return $this;
-    }
-
-    /**
-     * Add picture
-     *
-     * @param string $url
-     *
-     * @return $this
-     */
-    public function addPicture($url)
-    {
-        if (\count($this->pictures) < 10) {
-            $this->pictures[] = $url;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set pictures
-     *
-     * @param array $pictures
-     *
-     * @return $this
-     */
-    public function setPictures(array $pictures)
-    {
-        $this->pictures = $pictures;
-
-        return $this;
-    }
-
-    /**
-     * Get picture list
-     *
-     * @return array
-     */
-    public function getPictures()
-    {
-        return $this->pictures;
-    }
-
-    /**
-     * Get list of barcodes of the offer
-     *
-     * @return string[]
-     */
-    public function getBarcodes()
-    {
-        return $this->barcodes;
-    }
-
-    /**
-     * Set list of barcodes for that offer
-     *
-     * @param string[] $barcodes
-     *
-     * @return $this
-     */
-    public function setBarcodes(array $barcodes = [])
-    {
-        $this->barcodes = $barcodes;
-
-        return $this;
-    }
-
-    /**
-     * Add one barcode to the collection of barcodes of this offer
-     *
-     * @param string $barcode
-     *
-     * @return $this
-     */
-    public function addBarcode($barcode)
+    public function addBarcode(string $barcode): self
     {
         $this->barcodes[] = $barcode;
 
         return $this;
     }
 
-    /**
-     * Sets list of custom elements
-     *
-     * @param array $customElements Array (keys are element types) of arrays (element values)
-     *
-     * @return $this
-     */
-    public function setCustomElements(array $customElements = [])
-    {
-        $this->customElements = $customElements;
-
-        return $this;
-    }
-
-    /**
-     * Add a custom element with given type and value
-     * Multiple elements of the same type are supported
-     *
-     * @param string $elementType
-     * @param mixed  $value
-     *
-     * @return $this
-     */
-    public function addCustomElement($elementType, $value)
-    {
-        if ($value !== null) {
-            // Add value to the list of values of the given element type creating array when needed
-            $this->customElements[$elementType][] = $value;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Returns a list of custom elements
-     * Always returns an array even if no custom elements were added
-     *
-     * @return array
-     */
-    public function getCustomElements()
-    {
-        return $this->customElements ?: [];
-    }
-
-    /**
-     * Returns a list of values for the specified custom element type
-     * Always returns an array
-     *
-     * @param string $elementType
-     *
-     * @return array
-     */
-    public function getCustomElementByType($elementType)
-    {
-        // TODO: Use ?? operator when support for PHP 5.6 is no longer needed
-        if (isset($this->customElements[$elementType])) {
-            return $this->customElements[$elementType];
-        }
-
-        return [];
-    }
-
-    /**
-     * @return OfferCondition
-     */
-    public function getCondition()
-    {
-        return $this->condition;
-    }
-
-    /**
-     * @param OfferCondition $condition
-     *
-     * @return $this
-     */
-    public function addCondition(OfferCondition $condition)
+    public function addCondition(OfferCondition $condition): self
     {
         $this->condition = $condition;
 
@@ -873,72 +119,502 @@ abstract class AbstractOffer implements OfferInterface
     }
 
     /**
-     * @return bool
+     * Add a custom element with given type and value
+     * Multiple elements of the same type are supported
      */
-    public function getAutoDiscount()
+    public function addCustomElement(string $elementType, mixed $value): self
+    {
+        if ($value !== null) {
+            $this->customElements[$elementType][] = $value;
+        }
+
+        return $this;
+    }
+
+    public function addDeliveryOption(Delivery $option): self
+    {
+        $this->deliveryOptions[] = $option;
+
+        return $this;
+    }
+
+    public function addParam(OfferParam $param): self
+    {
+        $this->params[] = $param;
+
+        return $this;
+    }
+
+    public function addPicture(string $url): self
+    {
+        if (count($this->pictures) < 10) {
+            $this->pictures[] = $url;
+        }
+
+        return $this;
+    }
+
+    public function getAutoDiscount(): ?bool
     {
         return $this->autoDiscount;
     }
 
-    /**
-     * @param bool $autoDiscount
-     *
-     * @return $this
-     */
-    public function setAutoDiscount($autoDiscount)
+    public function setAutoDiscount(bool $autoDiscount): self
     {
         $this->autoDiscount = $autoDiscount;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    abstract protected function getOptions();
-
-    /**
-     * @return array
-     */
-    private function getHeaderOptions()
+    public function getBarcodes(): array
     {
-        return [
-                'url' => $this->getUrl(),
-                'price' => $this->getPrice(),
-                'oldprice' => $this->getOldPrice(),
-                'purchase_price' => $this->getPurchasePrice(),
-                'currencyId' => $this->getCurrencyId(),
-                'categoryId' => \array_merge(
-                    [$this->getCategoryId()],
-                    $this->getCategoriesId()
-                ),
-                'market_category' => $this->getMarketCategory(),
-                'picture' => $this->getPictures(),
-                'pickup' => $this->isPickup(),
-                'store' => $this->isStore(),
-                'delivery' => $this->isDelivery(),
-                'local_delivery_cost' => $this->getLocalDeliveryCost(),
-                'weight' => $this->getWeight(),
-                'dimensions' => $this->getDimensions(),
-                'name' => $this->getName(),
-                'enable_auto_discounts' => $this->getAutoDiscount(),
-            ] + $this->getCustomElements();
+        return $this->barcodes;
     }
 
-    /**
-     * @return array
-     */
-    private function getFooterOptions()
+    public function setBarcodes(array $barcodes = []): self
     {
-        return [
-            'description' => $this->getDescription(),
-            'sales_notes' => $this->getSalesNotes(),
-            'manufacturer_warranty' => $this->isManufacturerWarranty(),
-            'country_of_origin' => $this->getCountryOfOrigin(),
-            'downloadable' => $this->isDownloadable(),
-            'adult' => $this->isAdult(),
-            'cpa' => $this->getCpa(),
-            'barcode' => $this->getBarcodes(),
+        $this->barcodes = $barcodes;
+
+        return $this;
+    }
+
+    public function getCategoriesId(): array
+    {
+        return $this->categoriesId;
+    }
+
+    public function setCategoriesId(array $categoriesId): self
+    {
+        $this->categoriesId = $categoriesId;
+
+        return $this;
+    }
+
+    public function getCategoryId(): int
+    {
+        return $this->categoryId;
+    }
+
+    public function setCategoryId(int $categoryId): self
+    {
+        $this->categoryId = $categoryId;
+
+        return $this;
+    }
+
+    public function getCondition(): ?OfferCondition
+    {
+        return $this->condition;
+    }
+
+    public function getCountryOfOrigin(): ?string
+    {
+        return $this->countryOfOrigin;
+    }
+
+    public function setCountryOfOrigin(string $countryOfOrigin): self
+    {
+        $this->countryOfOrigin = $countryOfOrigin;
+
+        return $this;
+    }
+
+    public function getCpa(): ?int
+    {
+        return $this->cpa;
+    }
+
+    public function setCpa(int $cpa): self
+    {
+        $this->cpa = $cpa;
+
+        return $this;
+    }
+
+    public function getCurrencyId(): string
+    {
+        return $this->currencyId->value;
+    }
+
+    public function setCurrencyId(CurrencyEnum $currencyId): self
+    {
+        $this->currencyId = $currencyId;
+
+        return $this;
+    }
+
+    public function getCustomElementByType(string $elementType): array
+    {
+        return $this->customElements[$elementType] ?? [];
+    }
+
+    public function getCustomElements(): array
+    {
+        return $this->customElements;
+    }
+
+    public function setCustomElements(array $customElements = []): self
+    {
+        $this->customElements = $customElements;
+
+        return $this;
+    }
+
+    public function getDeliveryOptions(): array
+    {
+        return $this->deliveryOptions;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getDimensions(): ?string
+    {
+        return $this->dimensions;
+    }
+
+    public function setDimensions(float $length, float $width, float $height): self
+    {
+        $dimensions = [
+            round($length, 3),
+            round($width, 3),
+            round($height, 3),
         ];
+
+        $this->dimensions = implode('/', $dimensions);
+
+        return $this;
     }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function setId($id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getLocalDeliveryCost(): ?float
+    {
+        return $this->localDeliveryCost;
+    }
+
+    public function setLocalDeliveryCost(float $localDeliveryCost): self
+    {
+        $this->localDeliveryCost = $localDeliveryCost;
+
+        return $this;
+    }
+
+    public function getMarketCategory(): ?string
+    {
+        return $this->marketCategory;
+    }
+
+    public function setMarketCategory(string $marketCategory): self
+    {
+        $this->marketCategory = $marketCategory;
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getOldPrice(): ?float
+    {
+        return $this->oldPrice;
+    }
+
+    public function setOldPrice(float $oldPrice): self
+    {
+        $this->oldPrice = $oldPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return OfferParam[]
+     */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
+    public function getPictures(): array
+    {
+        return $this->pictures;
+    }
+
+    public function setPictures(array $pictures): self
+    {
+        $this->pictures = $pictures;
+
+        return $this;
+    }
+
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getPurchasePrice(): ?float
+    {
+        return $this->purchasePrice;
+    }
+
+    public function setPurchasePrice(float $purchasePrice): self
+    {
+        $this->purchasePrice = $purchasePrice;
+
+        return $this;
+    }
+
+    public function getSalesNotes(): ?string
+    {
+        return $this->salesNotes;
+    }
+
+    public function setSalesNotes(string $salesNotes): self
+    {
+        $this->salesNotes = $salesNotes;
+
+        return $this;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(float $weight): self
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function isAdult(): ?bool
+    {
+        return $this->adult;
+    }
+
+    public function isAvailable(): ?bool
+    {
+        return $this->available;
+    }
+
+    public function isDelivery(): ?bool
+    {
+        return $this->delivery;
+    }
+
+    public function isDownloadable(): ?bool
+    {
+        return $this->downloadable;
+    }
+
+    public function isManufacturerWarranty(): ?bool
+    {
+        return $this->manufacturerWarranty;
+    }
+
+    public function isPickup(): ?bool
+    {
+        return $this->pickup;
+    }
+
+    public function isStore(): ?bool
+    {
+        return $this->store;
+    }
+
+    public function setAdult(bool $adult): self
+    {
+        $this->adult = $adult;
+
+        return $this;
+    }
+
+    public function setAvailable(bool $available): self
+    {
+        $this->available = $available;
+
+        return $this;
+    }
+
+    public function setDelivery(bool $delivery): self
+    {
+        $this->delivery = $delivery;
+
+        return $this;
+    }
+
+    public function setDownloadable(bool $downloadable): self
+    {
+        $this->downloadable = $downloadable;
+
+        return $this;
+    }
+
+    public function setManufacturerWarranty(bool $manufacturerWarranty): self
+    {
+        $this->manufacturerWarranty = $manufacturerWarranty;
+
+        return $this;
+    }
+
+    public function setPickup(bool $pickup): self
+    {
+        $this->pickup = $pickup;
+
+        return $this;
+    }
+
+    public function setStore(bool $store): self
+    {
+        $this->store = $store;
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return array_merge($this->getHeaderOptions(), $this->getOptions(), $this->getFooterOptions());
+    }
+
+    private function getFooterOptions(): array
+    {
+        $data = [];
+
+        if ($this->getDescription() !== null) {
+            $data['description'] = $this->getDescription();
+        }
+
+        if ($this->getSalesNotes() !== null) {
+            $data['sales_notes'] = $this->getSalesNotes();
+        }
+
+        if ($this->isManufacturerWarranty() !== null) {
+            $data['manufacturer_warranty'] = $this->isManufacturerWarranty();
+        }
+
+        if ($this->isDownloadable() !== null) {
+            $data['downloadable'] = $this->isDownloadable();
+        }
+
+        if ($this->isAdult() !== null) {
+            $data['adult'] = $this->isAdult();
+        }
+
+        if ($this->getCpa() !== null) {
+            $data['cpa'] = $this->getCpa();
+        }
+
+        if (count($this->getBarcodes())) {
+            $data['barcode'] = $this->getBarcodes();
+        }
+
+        return $data;
+    }
+
+    private function getHeaderOptions(): array
+    {
+        $data = [
+            'url'        => $this->getUrl(),
+            'price'      => $this->getPrice(),
+            'currencyId' => $this->getCurrencyId(),
+            'categoryId' => array_merge([$this->getCategoryId()], $this->getCategoriesId()),
+            'name'       => $this->getName(),
+        ];
+
+        if ($this->getOldPrice() !== null) {
+            $data['oldprice'] = $this->getOldPrice();
+        }
+
+        if ($this->getPurchasePrice() !== null) {
+            $data['purchase_price'] = $this->getPurchasePrice();
+        }
+
+        if ($this->getMarketCategory() !== null) {
+            $data['market_category'] = $this->getMarketCategory();
+        }
+
+        if (count($this->getPictures())) {
+            $data['picture'] = $this->getPictures();
+        }
+
+        if ($this->isPickup() !== null) {
+            $data['pickup'] = $this->isPickup();
+        }
+
+        if ($this->isStore() !== null) {
+            $data['store'] = $this->isStore();
+        }
+
+        if ($this->isDelivery() !== null) {
+            $data['delivery'] = $this->isDelivery();
+        }
+
+        if ($this->getLocalDeliveryCost() !== null) {
+            $data['local_delivery_cost'] = $this->getLocalDeliveryCost();
+        }
+
+        if ($this->getWeight() !== null) {
+            $data['weight'] = $this->getWeight();
+        }
+
+        if ($this->getDimensions() !== null) {
+            $data['dimensions'] = $this->getDimensions();
+        }
+
+        if ($this->getAutoDiscount() !== null) {
+            $data['enable_auto_discounts'] = $this->getAutoDiscount();
+        }
+
+        return $data + $this->getCustomElements();
+    }
+
+    abstract protected function getOptions(): array;
 }

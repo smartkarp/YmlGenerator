@@ -1,53 +1,20 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
-
-/**
- * Interface Offer
- */
 interface OfferInterface
 {
-    /**
-     * @return string
-     */
-    public function getId();
+    public function getCondition(): ?OfferCondition;
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getDeliveryOptions(): array;
 
-    /**
-     * @return bool
-     */
-    public function isAvailable();
+    public function getId(): string;
 
-    /**
-     * @return array
-     */
-    public function getDeliveryOptions();
+    public function getParams(): array;
 
-    /**
-     * @return array
-     */
-    public function getParams();
+    public function getType(): ?string;
 
-    /**
-     * @return object
-     */
-    public function getCondition();
+    public function isAvailable(): ?bool;
 
-    /**
-     * @return array
-     */
-    public function toArray();
+    public function toArray(): array;
 }

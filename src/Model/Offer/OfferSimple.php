@@ -1,115 +1,60 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
-
-/**
- * Class OfferSimple
- */
-class OfferSimple extends AbstractOffer implements OfferGroupAwareInterface
+final class OfferSimple extends AbstractOffer implements OfferGroupAwareInterface
 {
     use OfferGroupTrait;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $vendor = null;
 
-    /**
-     * @var string
-     */
-    private $vendor;
+    private ?string $vendorCode = null;
 
-    /**
-     * @var string
-     */
-    private $vendorCode;
-
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVendor()
+    public function getVendor(): ?string
     {
         return $this->vendor;
     }
 
-    /**
-     * @param string $vendor
-     *
-     * @return $this
-     */
-    public function setVendor($vendor)
+    public function setVendor(?string $vendor): self
     {
         $this->vendor = $vendor;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVendorCode()
+    public function getVendorCode(): ?string
     {
         return $this->vendorCode;
     }
 
-    /**
-     * @param string $vendorCode
-     *
-     * @return $this
-     */
-    public function setVendorCode($vendorCode)
+    public function setVendorCode(?string $vendorCode): self
     {
         $this->vendorCode = $vendorCode;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    protected function getOptions(): array
     {
-        return [
-            'name' => $this->getName(),
-            'vendor' => $this->getVendor(),
+        $data = [
+            'name'       => $this->getName(),
+            'vendor'     => $this->getVendor(),
             'vendorCode' => $this->getVendorCode(),
         ];
+
+        if ($this->getVendor() !== null) {
+            $data['vendor'] = $this->getVendor();
+        }
+
+        if ($this->getVendorCode() !== null) {
+            $data['vendorCode'] = $this->getVendorCode();
+        }
+
+        return $data;
     }
 }

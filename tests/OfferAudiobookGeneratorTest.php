@@ -1,41 +1,23 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferAudiobook;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferAudiobook;
-
-/**
- * Generator test
- */
-class OfferAudiobookGeneratorTest extends AbstractGeneratorTest
+final class OfferAudiobookGeneratorTest extends AbstractGeneratorTest
 {
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'Audiobook';
         $this->runGeneratorTest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferAudiobook())
+        return (new OfferAudiobook(publisher: $this->faker->name))
             ->setAuthor($this->faker->name)
             ->setName($this->faker->name)
-            ->setPublisher($this->faker->name)
             ->setSeries($this->faker->name)
             ->setYear($this->faker->numberBetween(1, 9999))
             ->setISBN($this->faker->isbn13)
@@ -47,7 +29,6 @@ class OfferAudiobookGeneratorTest extends AbstractGeneratorTest
             ->setPerformanceType($this->faker->name)
             ->setStorage($this->faker->name)
             ->setFormat($this->faker->name)
-            ->setRecordingLength($this->faker->name)
-        ;
+            ->setRecordingLength($this->faker->name);
     }
 }

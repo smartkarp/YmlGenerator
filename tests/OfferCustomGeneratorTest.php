@@ -1,58 +1,50 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferCondition;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferCustom;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferParam;
 
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferCondition;
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferCustom;
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferParam;
-
-/**
- * Generator test
- */
-class OfferCustomGeneratorTest extends AbstractGeneratorTest
+final class OfferCustomGeneratorTest extends AbstractGeneratorTest
 {
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'Custom';
         $this->runGeneratorTest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferCustom())
-            ->setTypePrefix($this->faker->colorName)
-            ->setVendor($this->faker->company)
+        return (new OfferCustom(
+            categoryId: $this->faker->numberBetween(),
+            currencyId: CurrencyEnum::RUB,
+            id: $this->faker->name,
+            model: $this->faker->userName,
+            name: $this->faker->name,
+            price: $this->faker->randomFloat(2),
+            typePrefix: $this->faker->colorName,
+            url: $this->faker->url,
+            vendor: $this->faker->company
+        ))
             ->setVendorCode($this->faker->companySuffix)
-            ->setModel($this->faker->userName)
             ->setGroupId($this->faker->numberBetween())
             ->setStore($this->faker->boolean)
             ->addParam(
-                (new OfferParam())
-                    ->setName($this->faker->name)
-                    ->setUnit($this->faker->text(5))
-                    ->setValue($this->faker->text(10))
+                new OfferParam(
+                    name: $this->faker->name,
+                    value: $this->faker->text(10),
+                    unit: $this->faker->text(5)
+                )
             )
             ->setPictures(['http://example.com/example.jpeg', 'http://example.com/example2.jpeg'])
             ->addCondition(
-                (new OfferCondition())
-                    ->setType($this->faker->text(5))
-                    ->setReasonText($this->faker->text(10))
-            )
-        ;
+                new OfferCondition(
+                    reasonText: $this->faker->text(10),
+                    type: $this->faker->text(5)
+                )
+            );
     }
 }

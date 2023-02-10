@@ -1,29 +1,19 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Cdata;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferSimple;
+use function range;
 
-use Bukashk0zzz\YmlGenerator\Cdata;
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
-
-/**
- * Generator test
- */
-class OfferCustomElementsGeneratorTest extends AbstractGeneratorTest
+final class OfferCustomElementsGeneratorTest extends AbstractGeneratorTest
 {
-    const CDATA_TEST_STRING = '<p>Simple HTML</p></description></offer><![CDATA[';
-    const OFFER_COUNT = 2;
+    private const CDATA_TEST_STRING = '<p>Simple HTML</p></description></offer><![CDATA[';
+    private const OFFER_COUNT = 2;
 
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         // Don't call $this->validateFileWithDtd() here because custom elements are not included into the default DTD
         $this->generateFile();
@@ -31,43 +21,24 @@ class OfferCustomElementsGeneratorTest extends AbstractGeneratorTest
     }
 
     /**
-     * Need to override parent::createOffers() in order to avoid setting description
-     * after calling self::createOffer()
-     *
-     * {@inheritdoc}
-     *
-     * @see \Bukashk0zzz\YmlGenerator\Tests\AbstractGeneratorTest::createOffers()
-     */
-    protected function createOffers()
-    {
-        $offers = [];
-        foreach (\range(1, self::OFFER_COUNT) as $id) {
-            $offers[] =
-                $this->createOffer()
-                    ->setId($id)
-                    ->setCategoryId($id)
-                ;
-        }
-
-        return $offers;
-    }
-
-    /**
      * Set the test description with CDATA here
      *
-     * {@inheritdoc}
-     *
-     * @see \Bukashk0zzz\YmlGenerator\Tests\AbstractGeneratorTest::createOffer()
+     * @see AbstractGeneratorTest::createOffer()
      */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        $offer = (new OfferSimple())
+        $offer = (new OfferSimple(
+            categoryId: $this->faker->numberBetween(),
+            currencyId: CurrencyEnum::RUB,
+            id: $this->faker->name,
+            name: $this->faker->name,
+            price: $this->faker->randomFloat(2),
+            url: $this->faker->url
+        ))
             ->setAvailable($this->faker->boolean)
-            ->setUrl($this->faker->url)
             ->setPrice($this->faker->numberBetween(1, 9999))
             ->setOldPrice($this->faker->numberBetween(1, 9999))
             ->setWeight($this->faker->numberBetween(1, 9999))
-            ->setCurrencyId('UAH')
             ->setDelivery($this->faker->boolean)
             ->setLocalDeliveryCost($this->faker->numberBetween(1, 9999))
             ->setSalesNotes($this->faker->text(45))
@@ -78,25 +49,23 @@ class OfferCustomElementsGeneratorTest extends AbstractGeneratorTest
             ->setMarketCategory($this->faker->word)
             ->setCpa($this->faker->numberBetween(0, 1))
             ->setBarcodes([$this->faker->ean13, $this->faker->ean13])
-
-            ->setName($this->faker->name)
             ->setVendor($this->faker->company)
             ->setDescription($this->faker->sentence)
             ->setVendorCode(null)
             ->setPickup(true)
-            ->setGroupId($this->faker->numberBetween())
             ->addPicture('http://example.com/example.jpeg')
             ->addBarcode($this->faker->ean13)
-
             ->setCustomElements(['custom_element' => [100500, 'string value']])
             ->addCustomElement('custom_element', true)
             ->addCustomElement('custom_element', false)
             ->addCustomElement('custom_element', null) // Should not be written
             ->addCustomElement('custom_element', $cdata = new Cdata(self::CDATA_TEST_STRING))
-            ->addCustomElement('stock_quantity', 100) // https://rozetka.com.ua/sellerinfo/pricelist/
-        ;
+            ->addCustomElement('stock_quantity', 100);
 
-        $this->assertSame([100500, 'string value', true, false, $cdata], $offer->getCustomElementByType('custom_element'));
+        $this->assertSame(
+            [100500, 'string value', true, false, $cdata],
+            $offer->getCustomElementByType('custom_element')
+        );
         $this->assertSame([100], $offer->getCustomElementByType('stock_quantity'));
         $this->assertSame([], $offer->getCustomElementByType('non_existent_element'));
 
@@ -104,16 +73,34 @@ class OfferCustomElementsGeneratorTest extends AbstractGeneratorTest
     }
 
     /**
+     * Need to override parent::createOffers() in order to avoid setting description after calling self::createOffer()
+     *
+     * @see AbstractGeneratorTest::createOffers()
+     */
+    protected function createOffers(): array
+    {
+        $offers = [];
+        foreach (range(1, self::OFFER_COUNT) as $id) {
+            $offers[] =
+                $this->createOffer()
+                    ->setId($id)
+                    ->setCategoryId($id);
+        }
+
+        return $offers;
+    }
+
+    /**
      * Load generated XML file and check custom elements
      */
-    private function checkCustomElements()
+    private function checkCustomElements(): void
     {
         // Much easier to test with SimpleXML tahn with DOM
-        $yml = \simplexml_load_file($this->settings->getOutputFile());
+        $yml = simplexml_load_string(file_get_contents($this->settings->getOutputFile()));
 
         $offers = $yml->shop->offers->offer;
         $this->assertNotEmpty($offers);
-        $this->assertEquals(self::OFFER_COUNT, \count($offers));
+        $this->assertCount(self::OFFER_COUNT, $offers);
 
         foreach ($offers as $offer) {
             $prop = 'stock_quantity';
@@ -137,10 +124,8 @@ class OfferCustomElementsGeneratorTest extends AbstractGeneratorTest
 
     /**
      * Create instance of Cdata class with a predefined test string
-     *
-     * @return \Bukashk0zzz\YmlGenerator\Cdata
      */
-    private function makeDescription()
+    private function makeDescription(): Cdata
     {
         return new Cdata(self::CDATA_TEST_STRING);
     }

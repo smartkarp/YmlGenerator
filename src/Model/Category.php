@@ -1,130 +1,74 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model;
 
-namespace Bukashk0zzz\YmlGenerator\Model;
-
-/**
- * Class Category
- */
-class Category
+final class Category
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private array $attributes;
 
-    /**
-     * @var int
-     */
-    private $parentId;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private ?int $parentId;
 
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Category
-     */
-    public function setId($id)
+    public function __construct(int $id, string $name, int $parentId = null, array $attributes = [])
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getParentId()
-    {
-        return $this->parentId;
-    }
-
-    /**
-     * @param int $parentId
-     *
-     * @return Category
-     */
-    public function setParentId($parentId)
-    {
-        $this->parentId = $parentId;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return Category
-     */
-    public function setName($name)
-    {
         $this->name = $name;
-
-        return $this;
+        $this->parentId = $parentId;
+        $this->attributes = $attributes;
     }
 
-    /**
-     * @return array
-     */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * Sets list of custom attributes (Array of arrays [['name' => ?, 'value' => ?]])
-     *
-     * @param array $attributes
-     *
-     * @return Category
-     */
-    public function setAttributes(array $attributes)
+    public function setAttributes(array $attributes): self
     {
         $this->attributes = $attributes;
 
         return $this;
     }
 
-    /**
-     * @param string $attributeName
-     * @param mixed  $value
-     *
-     * @return Category
-     */
-    public function pushAttribute($attributeName, $value)
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getParentId(): ?int
+    {
+        return $this->parentId;
+    }
+
+    public function setParentId(?int $parentId): self
+    {
+        $this->parentId = $parentId;
+
+        return $this;
+    }
+
+    public function pushAttribute(string $attributeName, mixed $value): self
     {
         $this->attributes[] = ['name' => $attributeName, 'value' => $value];
 

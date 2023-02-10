@@ -1,66 +1,72 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Generator;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
+use Smartkarp\Bundle\YmlGeneratorBundle\Settings;
+use Faker\Factory as Faker;
+use Faker\Generator as FakerGenerator;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use function ob_get_clean;
+use function ob_start;
 
-use Bukashk0zzz\YmlGenerator\Generator;
-use Bukashk0zzz\YmlGenerator\Model\ShopInfo;
-use Bukashk0zzz\YmlGenerator\Settings;
-
-/**
- * Generator test
- */
-class GeneratorTest extends \PHPUnit_Framework_TestCase
+final class GeneratorTest extends TestCase
 {
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testExceptionForIncompatibleAnnotations()
+    private FakerGenerator $faker;
+
+    public function testExceptionForIncompatibleAnnotations(): void
     {
-        (new Generator((new Settings())->setOutputFile('')))
-            ->generate(new ShopInfo(), [], [], [])
-        ;
+        $this->expectException(RuntimeException::class);
+
+        (new Generator())
+            ->setSettings((new Settings())->setOutputFile(''))
+            ->generate($this->createShopInfo(), [], [], []);
     }
 
-    /**
-     * @expectedException \LogicException
-     */
-    public function testExceptionIfManyDestinationUsed()
+    public function testExceptionIfManyDestinationUsed(): void
     {
         $settings = (new Settings())
             ->setOutputFile('')
-            ->setReturnResultYMLString(true)
-        ;
+            ->setReturnResultYMLString(true);
 
-        (new Generator($settings))
-            ->generate(new ShopInfo(), [], [], [])
-        ;
+        $this->expectException(RuntimeException::class);
+
+        (new Generator())->setSettings($settings)->generate($this->createShopInfo(), [], [], []);
     }
 
     /**
      * Test equal returned value and printed
      */
-    public function testGenerationEchoValueEqualsReturnValue()
+    public function testGenerationEchoValueEqualsReturnValue(): void
     {
-        $settings = (new Settings())
-            ->setReturnResultYMLString(true)
-        ;
-        $value = (new Generator($settings))
-            ->generate(new ShopInfo(), [], [], [], []);
+        $settings = (new Settings())->setReturnResultYMLString(true);
+        $value = (new Generator())->setSettings($settings)->generate($this->createShopInfo(), [], [], []);
 
-        \ob_start();
-        (new Generator(new Settings()))
-            ->generate(new ShopInfo(), [], [], [], []);
-        $value2 = \ob_get_clean();
+        ob_start();
+        (new Generator())->setSettings(new Settings())->generate($this->createShopInfo(), [], [], []);
+        $value2 = ob_get_clean();
 
         $this->assertEquals($value, $value2);
+    }
+
+    protected function setUp(): void
+    {
+        $this->faker = Faker::create();
+    }
+
+    private function createShopInfo(): ShopInfo
+    {
+        return new ShopInfo(
+            company: $this->faker->company,
+            name: $this->faker->name,
+            url: $this->faker->url,
+            agency: $this->faker->name,
+            autoDiscount: $this->faker->boolean,
+            email: $this->faker->email,
+            platform: $this->faker->name,
+            version: $this->faker->numberBetween(1, 999)
+        );
     }
 }

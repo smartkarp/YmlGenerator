@@ -1,43 +1,32 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferEventTicket;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferEventTicket;
-
-/**
- * Generator test
- */
-class OfferEventTicketGeneratorTest extends AbstractGeneratorTest
+final class OfferEventTicketGeneratorTest extends AbstractGeneratorTest
 {
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'EventTicket';
         $this->runGeneratorTest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferEventTicket())
-            ->setName($this->faker->name)
-            ->setPlace($this->faker->name)
-            ->setDate($this->faker->date('d/m/y'))
+        return (new OfferEventTicket(
+            categoryId: 999,
+            currencyId: CurrencyEnum::RUB,
+            date: $this->faker->date('d/m/y'),
+            id: $this->faker->name,
+            name: $this->faker->name,
+            place: $this->faker->name,
+            price: $this->faker->randomFloat(2),
+            url: $this->faker->url,
+        ))
             ->setPremiere($this->faker->numberBetween(0, 1))
-            ->setKids($this->faker->numberBetween(0, 1))
-        ;
+            ->setKids($this->faker->numberBetween(0, 1));
     }
 }

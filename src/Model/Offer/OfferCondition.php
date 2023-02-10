@@ -1,69 +1,37 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
-
-/**
- * Class OfferCondition
- */
-class OfferCondition
+final class OfferCondition
 {
-    /**
-     * @var string
-     */
-    private $type;
+    private string $reasonText;
 
-    /**
-     * @var string
-     */
-    private $reasonText;
+    private string $type;
 
-    /**
-     * @return string
-     */
-    public function getReasonText()
+    public function __construct(string $reasonText, string $type)
+    {
+        $this->reasonText = $reasonText;
+        $this->type = $type;
+    }
+
+    public function getReasonText(): string
     {
         return $this->reasonText;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Description text for the reason for markdowns
-     *
-     * @param string $reasonText
-     *
-     * @return $this
-     */
-    public function setReasonText($reasonText)
+    public function setReasonText(string $reasonText): self
     {
         $this->reasonText = $reasonText;
 
         return $this;
     }
 
-    /**
-     * Set product condition
-     *
-     * @param string $type
-     *
-     * @return $this
-     */
-    public function setType($type)
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
     {
         $this->type = $type;
 

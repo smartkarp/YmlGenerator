@@ -1,268 +1,178 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
-
-/**
- * Trait OfferBook
- */
 trait OfferBookTrait
 {
-    /**
-     * @var string
-     */
-    private $author;
+    private ?string $ISBN = null;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $author = null;
 
-    /**
-     * @var string
-     */
-    private $publisher;
+    private ?string $language = null;
 
-    /**
-     * @var string
-     */
-    private $series;
+    private ?int $part = null;
 
-    /**
-     * @var int
-     */
-    private $year;
+    private string $publisher;
 
-    /**
-     * @var string
-     */
-    private $ISBN;
+    private ?string $series = null;
 
-    /**
-     * @var int
-     */
-    private $volume;
+    private ?string $tableOfContents = null;
 
-    /**
-     * @var int
-     */
-    private $part;
+    private ?int $volume = null;
 
-    /**
-     * @var string
-     */
-    private $language;
+    private ?int $year = null;
 
-    /**
-     * @var string
-     */
-    private $tableOfContents;
+    public function __construct(string $publisher) {
+        $this->publisher = $publisher;
+    }
 
-    /**
-     * @return string
-     */
-    public function getAuthor()
+    public function getAuthor(): ?string
     {
         return $this->author;
     }
 
-    /**
-     * @param string $author
-     *
-     * @return $this
-     */
-    public function setAuthor($author)
+    public function setAuthor(?string $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPublisher()
-    {
-        return $this->publisher;
-    }
-
-    /**
-     * @param string $publisher
-     *
-     * @return $this
-     */
-    public function setPublisher($publisher)
-    {
-        $this->publisher = $publisher;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSeries()
-    {
-        return $this->series;
-    }
-
-    /**
-     * @param string $series
-     *
-     * @return $this
-     */
-    public function setSeries($series)
-    {
-        $this->series = $series;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * @param int $year
-     *
-     * @return $this
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getISBN()
+    public function getISBN(): ?string
     {
         return $this->ISBN;
     }
 
-    /**
-     * @param string $ISBN
-     *
-     * @return $this
-     */
-    public function setISBN($ISBN)
+    public function setISBN(?string $ISBN): self
     {
         $this->ISBN = $ISBN;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getVolume()
-    {
-        return $this->volume;
-    }
-
-    /**
-     * @param int $volume
-     *
-     * @return $this
-     */
-    public function setVolume($volume)
-    {
-        $this->volume = $volume;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPart()
-    {
-        return $this->part;
-    }
-
-    /**
-     * @param int $part
-     *
-     * @return $this
-     */
-    public function setPart($part)
-    {
-        $this->part = $part;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
+    public function getLanguage(): ?string
     {
         return $this->language;
     }
 
-    /**
-     * @param string $language
-     *
-     * @return $this
-     */
-    public function setLanguage($language)
+    public function setLanguage(?string $language): self
     {
         $this->language = $language;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTableOfContents()
+    public function getPart(): ?int
+    {
+        return $this->part;
+    }
+
+    public function setPart(?int $part): self
+    {
+        $this->part = $part;
+
+        return $this;
+    }
+
+    public function getPublisher(): string
+    {
+        return $this->publisher;
+    }
+
+    public function setPublisher(string $publisher): self
+    {
+        $this->publisher = $publisher;
+
+        return $this;
+    }
+
+    public function getSeries(): ?string
+    {
+        return $this->series;
+    }
+
+    public function setSeries(?string $series): self
+    {
+        $this->series = $series;
+
+        return $this;
+    }
+
+    public function getTableOfContents(): ?string
     {
         return $this->tableOfContents;
     }
 
-    /**
-     * @param string $tableOfContents
-     *
-     * @return $this
-     */
-    public function setTableOfContents($tableOfContents)
+    public function setTableOfContents(?string $tableOfContents): self
     {
         $this->tableOfContents = $tableOfContents;
 
         return $this;
+    }
+
+    public function getVolume(): ?int
+    {
+        return $this->volume;
+    }
+
+    public function setVolume(?int $volume): self
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(?int $year): self
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    private function getTraitOptions(): array
+    {
+        $data = [
+            'name'      => $this->getName(),
+            'publisher' => $this->getPublisher(),
+        ];
+
+        if ($this->getAuthor() !== null) {
+            $data['author'] = $this->getAuthor();
+        }
+
+        if ($this->getSeries() !== null) {
+            $data['series'] = $this->getSeries();
+        }
+
+        if ($this->getYear() !== null) {
+            $data['year'] = $this->getYear();
+        }
+
+        if ($this->getISBN() !== null) {
+            $data['ISBN'] = $this->getISBN();
+        }
+
+        if ($this->getVolume() !== null) {
+            $data['volume'] = $this->getVolume();
+        }
+
+        if ($this->getPart() !== null) {
+            $data['part'] = $this->getPart();
+        }
+
+        if ($this->getLanguage() !== null) {
+            $data['language'] = $this->getLanguage();
+        }
+
+        if ($this->getTableOfContents() !== null) {
+            $data['table_of_contents'] = $this->getTableOfContents();
+        }
+
+        return $data;
     }
 }

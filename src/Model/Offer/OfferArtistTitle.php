@@ -1,139 +1,106 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
 
-/**
- * Class OfferArtistTitle
- */
-class OfferArtistTitle extends AbstractOffer
+final class OfferArtistTitle extends AbstractOffer
 {
-    /**
-     * @var string
-     */
-    private $artist;
+    private const TYPE = 'artist.title';
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $artist = null;
 
-    /**
-     * @var int
-     */
-    private $year;
+    private ?string $media = null;
 
-    /**
-     * @var string
-     */
-    private $media;
+    private string $title;
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'artist.title';
+    private ?int $year = null;
+
+    public function __construct(
+        int          $categoryId,
+        CurrencyEnum $currencyId,
+        string       $id,
+        string       $name,
+        float        $price,
+        string       $title,
+        string       $url
+    ) {
+        parent::__construct($categoryId, $currencyId, $id, $name, $price, $url);
+
+        $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
-    public function getArtist()
+    public function getArtist(): ?string
     {
         return $this->artist;
     }
 
-    /**
-     * @param string $artist
-     *
-     * @return OfferArtistTitle
-     */
-    public function setArtist($artist)
+    public function setArtist(string $artist): self
     {
         $this->artist = $artist;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return OfferArtistTitle
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * @param int $year
-     *
-     * @return OfferArtistTitle
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMedia()
+    public function getMedia(): ?string
     {
         return $this->media;
     }
 
-    /**
-     * @param string $media
-     *
-     * @return OfferArtistTitle
-     */
-    public function setMedia($media)
+    public function setMedia(string $media): self
     {
         $this->media = $media;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    public function getTitle(): string
     {
-        return [
-            'artist' => $this->getArtist(),
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return self::TYPE;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(int $year): self
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    protected function getOptions(): array
+    {
+        $data = [
             'title' => $this->getTitle(),
-            'year' => $this->getYear(),
-            'media' => $this->getMedia(),
         ];
+
+        if ($this->getArtist() !== null) {
+            $data['artist'] = $this->getArtist();
+        }
+
+        if ($this->getYear() !== null) {
+            $data['year'] = $this->getYear();
+        }
+
+        if ($this->getMedia() !== null) {
+            $data['media'] = $this->getMedia();
+        }
+
+        return $data;
     }
 }

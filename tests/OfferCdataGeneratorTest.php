@@ -1,29 +1,22 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Cdata;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferSimple;
+use DOMDocument;
+use DOMXPath;
+use function file_get_contents;
+use function range;
 
-use Bukashk0zzz\YmlGenerator\Cdata;
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferSimple;
-
-/**
- * Generator test
- */
-class OfferCdataGeneratorTest extends AbstractGeneratorTest
+final class OfferCdataGeneratorTest extends AbstractGeneratorTest
 {
-    const CDATA_TEST_STRING = '<p>Simple HTML</p></description></offer><![CDATA[';
-    const OFFER_COUNT = 2;
+    private const CDATA_TEST_STRING = '<p>Simple HTML</p></description></offer><![CDATA[';
+    private const OFFER_COUNT = 2;
 
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'Simple';
         $this->runGeneratorTest();
@@ -31,43 +24,24 @@ class OfferCdataGeneratorTest extends AbstractGeneratorTest
     }
 
     /**
-     * Need to override parent::createOffers() in order to avoid setting description
-     * after calling self::createOffer()
-     *
-     * {@inheritdoc}
-     *
-     * @see \Bukashk0zzz\YmlGenerator\Tests\AbstractGeneratorTest::createOffers()
-     */
-    protected function createOffers()
-    {
-        $offers = [];
-        foreach (\range(1, self::OFFER_COUNT) as $id) {
-            $offers[] =
-                $this->createOffer()
-                    ->setId($id)
-                    ->setCategoryId($id)
-                ;
-        }
-
-        return $offers;
-    }
-
-    /**
      * Set the test description with CDATA here
      *
-     * {@inheritdoc}
-     *
-     * @see \Bukashk0zzz\YmlGenerator\Tests\AbstractGeneratorTest::createOffer()
+     * @see AbstractGeneratorTest::createOffer()
      */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferSimple())
+        return (new OfferSimple(
+            categoryId: $this->faker->numberBetween(),
+            currencyId: CurrencyEnum::RUB,
+            id: $this->faker->name,
+            name: $this->faker->name,
+            price: $this->faker->randomFloat(2),
+            url: $this->faker->url
+        ))
             ->setAvailable($this->faker->boolean)
-            ->setUrl($this->faker->url)
             ->setPrice($this->faker->numberBetween(1, 9999))
             ->setOldPrice($this->faker->numberBetween(1, 9999))
             ->setWeight($this->faker->numberBetween(1, 9999))
-            ->setCurrencyId('UAH')
             ->setDelivery($this->faker->boolean)
             ->setLocalDeliveryCost($this->faker->numberBetween(1, 9999))
             ->setSalesNotes($this->faker->text(45))
@@ -78,27 +52,42 @@ class OfferCdataGeneratorTest extends AbstractGeneratorTest
             ->setMarketCategory($this->faker->word)
             ->setCpa($this->faker->numberBetween(0, 1))
             ->setBarcodes([$this->faker->ean13, $this->faker->ean13])
-
-            ->setName($this->faker->name)
             ->setVendor($this->faker->company)
             ->setDescription($this->makeDescription())
             ->setVendorCode(null)
             ->setPickup(true)
             ->setGroupId($this->faker->numberBetween())
             ->addPicture('http://example.com/example.jpeg')
-            ->addBarcode($this->faker->ean13)
-        ;
+            ->addBarcode($this->faker->ean13);
     }
 
     /**
-     * Retreive and check CDATA from the generated file
+     * Need to override parent::createOffers() in order to avoid setting description after calling self::createOffer()
+     *
+     * @see AbstractGeneratorTest::createOffers()
      */
-    private function checkCdata()
+    protected function createOffers(): array
     {
-        $ymlFile = new \DOMDocument();
-        $ymlFile->loadXML(\file_get_contents($this->settings->getOutputFile()));
+        $offers = [];
+        foreach (range(1, self::OFFER_COUNT) as $id) {
+            $offers[] =
+                $this->createOffer()
+                    ->setId($id)
+                    ->setCategoryId($id);
+        }
 
-        $xpath = new \DOMXPath($ymlFile);
+        return $offers;
+    }
+
+    /**
+     * Retrieve and check CDATA from the generated file
+     */
+    private function checkCdata(): void
+    {
+        $ymlFile = new DOMDocument();
+        $ymlFile->loadXML(file_get_contents($this->settings->getOutputFile()));
+
+        $xpath = new DOMXPath($ymlFile);
         $descriptionNodes = $xpath->query('//yml_catalog/shop/offers/offer/description');
         self::assertNotFalse($descriptionNodes);
 
@@ -114,10 +103,8 @@ class OfferCdataGeneratorTest extends AbstractGeneratorTest
 
     /**
      * Create instance of Cdata class with a predefined test string
-     *
-     * @return \Bukashk0zzz\YmlGenerator\Cdata
      */
-    private function makeDescription()
+    private function makeDescription(): Cdata
     {
         return new Cdata(self::CDATA_TEST_STRING);
     }

@@ -1,90 +1,52 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model;
 
-namespace Bukashk0zzz\YmlGenerator\Model;
-
-/**
- * Class Delivery
- */
-class Delivery
+final class Delivery
 {
-    /**
-     * @var int
-     */
-    private $cost;
+    private int $cost;
 
-    /**
-     * @var int
-     */
-    private $days;
+    private int $days;
 
-    /**
-     * @var int
-     */
-    private $orderBefore;
+    private ?int $orderBefore;
 
-    /**
-     * @return int
-     */
-    public function getCost()
+    public function __construct(int $cost, int $days, int $orderBefore = null)
+    {
+        $this->cost = $cost;
+        $this->days = $days;
+        $this->orderBefore = $orderBefore;
+    }
+
+    public function getCost(): int
     {
         return $this->cost;
     }
 
-    /**
-     * @param int $cost
-     *
-     * @return Delivery
-     */
-    public function setCost($cost)
+    public function setCost(int $cost): self
     {
         $this->cost = $cost;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getDays()
+    public function getDays(): int
     {
         return $this->days;
     }
 
-    /**
-     * @param int $days
-     *
-     * @return Delivery
-     */
-    public function setDays($days)
+    public function setDays(int $days): self
     {
         $this->days = $days;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getOrderBefore()
+    public function getOrderBefore(): ?int
     {
         return $this->orderBefore;
     }
 
-    /**
-     * @param int|null $orderBefore
-     *
-     * @return Delivery
-     */
-    public function setOrderBefore($orderBefore)
+    public function setOrderBefore(int $orderBefore): self
     {
         $this->orderBefore = $orderBefore;
 

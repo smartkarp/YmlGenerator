@@ -1,65 +1,39 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model;
 
-namespace Bukashk0zzz\YmlGenerator\Model;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
 
-/**
- * Class Currency
- */
-class Currency
+final class Currency
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private CurrencyEnum $id;
 
-    /**
-     * @var string
-     */
-    private $rate;
+    private float $rate;
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function __construct(CurrencyEnum $id, float $rate = 1)
     {
-        return $this->id;
+        $this->id = $id;
+        $this->rate = $rate;
     }
 
-    /**
-     * @param string $id
-     *
-     * @return Currency
-     */
-    public function setId($id)
+    public function getId(): string
+    {
+        return $this->id->value;
+    }
+
+    public function setId(CurrencyEnum $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRate()
+    public function getRate(): float
     {
         return $this->rate;
     }
 
-    /**
-     * @param string $rate
-     *
-     * @return Currency
-     */
-    public function setRate($rate)
+    public function setRate(float $rate): self
     {
         $this->rate = $rate;
 

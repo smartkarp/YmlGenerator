@@ -1,41 +1,23 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferBook;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferBook;
-
-/**
- * Generator test
- */
-class OfferBookGeneratorTest extends AbstractGeneratorTest
+final class OfferBookGeneratorTest extends AbstractGeneratorTest
 {
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'Book';
         $this->runGeneratorTest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferBook())
+        return (new OfferBook(publisher: $this->faker->name))
             ->setAuthor($this->faker->name)
             ->setName($this->faker->name)
-            ->setPublisher($this->faker->name)
             ->setSeries($this->faker->name)
             ->setYear($this->faker->numberBetween(1, 9999))
             ->setISBN($this->faker->isbn13)
@@ -44,7 +26,6 @@ class OfferBookGeneratorTest extends AbstractGeneratorTest
             ->setLanguage($this->faker->name)
             ->setBinding($this->faker->name)
             ->setPageExtent($this->faker->numberBetween(1, 9999))
-            ->setTableOfContents($this->faker->name)
-        ;
+            ->setTableOfContents($this->faker->name);
     }
 }

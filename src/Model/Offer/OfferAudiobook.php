@@ -1,177 +1,112 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
-
-/**
- * Class OfferAudiobook
- */
-class OfferAudiobook extends AbstractOffer
+final class OfferAudiobook extends AbstractOffer
 {
     use OfferBookTrait;
 
-    /**
-     * @var string
-     */
-    private $performedBy;
+    private const TYPE = 'audiobook';
 
-    /**
-     * @var string
-     */
-    private $performanceType;
+    private ?string $format = null;
 
-    /**
-     * @var string
-     */
-    private $format;
+    private ?string $performanceType = null;
 
-    /**
-     * @var string
-     */
-    private $storage;
+    private ?string $performedBy = null;
 
-    /**
-     * @var string
-     */
-    private $recordingLength;
+    private ?string $recordingLength = null;
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'audiobook';
-    }
+    private ?string $storage = null;
 
-    /**
-     * @return string
-     */
-    public function getPerformedBy()
-    {
-        return $this->performedBy;
-    }
-
-    /**
-     * @param string $performedBy
-     *
-     * @return $this
-     */
-    public function setPerformedBy($performedBy)
-    {
-        $this->performedBy = $performedBy;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPerformanceType()
-    {
-        return $this->performanceType;
-    }
-
-    /**
-     * @param string $performanceType
-     *
-     * @return $this
-     */
-    public function setPerformanceType($performanceType)
-    {
-        $this->performanceType = $performanceType;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFormat()
+    public function getFormat(): ?string
     {
         return $this->format;
     }
 
-    /**
-     * @param string $format
-     *
-     * @return $this
-     */
-    public function setFormat($format)
+    public function setFormat(?string $format): self
     {
         $this->format = $format;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStorage()
+    public function getPerformanceType(): ?string
     {
-        return $this->storage;
+        return $this->performanceType;
     }
 
-    /**
-     * @param string $storage
-     *
-     * @return $this
-     */
-    public function setStorage($storage)
+    public function setPerformanceType(?string $performanceType): self
     {
-        $this->storage = $storage;
+        $this->performanceType = $performanceType;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRecordingLength()
+    public function getPerformedBy(): ?string
+    {
+        return $this->performedBy;
+    }
+
+    public function setPerformedBy(?string $performedBy): self
+    {
+        $this->performedBy = $performedBy;
+
+        return $this;
+    }
+
+    public function getRecordingLength(): ?string
     {
         return $this->recordingLength;
     }
 
-    /**
-     * @param string $recordingLength
-     *
-     * @return $this
-     */
-    public function setRecordingLength($recordingLength)
+    public function setRecordingLength(?string $recordingLength): self
     {
         $this->recordingLength = $recordingLength;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    public function getStorage(): ?string
     {
-        return [
-            'author' => $this->getAuthor(),
-            'name' => $this->getName(),
-            'publisher' => $this->getPublisher(),
-            'series' => $this->getSeries(),
-            'year' => $this->getYear(),
-            'ISBN' => $this->getISBN(),
-            'volume' => $this->getVolume(),
-            'part' => $this->getPart(),
-            'language' => $this->getLanguage(),
-            'table_of_contents' => $this->getTableOfContents(),
-            'performed_by' => $this->getPerformedBy(),
-            'performance_type' => $this->getPerformanceType(),
-            'storage' => $this->getStorage(),
-            'format' => $this->getFormat(),
-            'recording_length' => $this->getRecordingLength(),
-        ];
+        return $this->storage;
+    }
+
+    public function setStorage(?string $storage): self
+    {
+        $this->storage = $storage;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return self::TYPE;
+    }
+
+    protected function getOptions(): array
+    {
+        $data = $this->getTraitOptions();
+
+        if ($this->getPerformedBy() !== null) {
+            $data['performed_by'] = $this->getPerformedBy();
+        }
+
+        if ($this->getPerformanceType() !== null) {
+            $data['performance_type'] = $this->getPerformanceType();
+        }
+
+        if ($this->getStorage() !== null) {
+            $data['storage'] = $this->getStorage();
+        }
+
+        if ($this->getFormat() !== null) {
+            $data['format'] = $this->getFormat();
+        }
+
+        if ($this->getRecordingLength() !== null) {
+            $data['recording_length'] = $this->getRecordingLength();
+        }
+
+        return $data;
     }
 }

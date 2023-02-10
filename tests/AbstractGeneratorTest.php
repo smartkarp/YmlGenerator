@@ -1,113 +1,48 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
-
-use Bukashk0zzz\YmlGenerator\Generator;
-use Bukashk0zzz\YmlGenerator\Model\Category;
-use Bukashk0zzz\YmlGenerator\Model\Currency;
-use Bukashk0zzz\YmlGenerator\Model\Delivery;
-use Bukashk0zzz\YmlGenerator\Model\ShopInfo;
-use Bukashk0zzz\YmlGenerator\Settings;
+use DOMDocument;
+use DOMImplementation;
+use Exception;
 use Faker\Factory as Faker;
+use Faker\Generator as FakerGenerator;
+use PHPUnit\Framework\TestCase;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Generator;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Category;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Currency;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Delivery;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
+use Smartkarp\Bundle\YmlGeneratorBundle\Settings;
+use function base64_encode;
+use function file_get_contents;
+use function range;
+use function sys_get_temp_dir;
+use function tempnam;
 
-/**
- * Abstract Generator test
- */
-abstract class AbstractGeneratorTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractGeneratorTest extends TestCase
 {
-    /**
-     * @var \Faker\Generator
-     */
-    protected $faker;
+    protected array $categories;
 
-    /**
-     * @var Settings
-     */
-    protected $settings;
+    protected array $currencies;
 
-    /**
-     * @var ShopInfo
-     */
-    protected $shopInfo;
+    protected array $deliveries;
 
-    /**
-     * @var array
-     */
-    protected $currencies;
+    protected FakerGenerator $faker;
 
-    /**
-     * @var array
-     */
-    protected $categories;
+    protected string $offerType;
 
-    /**
-     * @var array
-     */
-    protected $deliveries;
+    protected Settings $settings;
 
-    /**
-     * @var string
-     */
-    protected $offerType;
+    protected ShopInfo $shopInfo;
 
-    /**
-     * Test setup
-     */
-    protected function setUp()
-    {
-        $this->faker = Faker::create();
-
-        $this->settings = $this->createSettings();
-        $this->shopInfo = $this->createShopInfo();
-        $this->currencies = $this->createCurrencies();
-        $this->categories = $this->createCategories();
-        $this->deliveries = $this->createDeliveries();
-    }
-
-    /**
-     * @return \Bukashk0zzz\YmlGenerator\Model\Offer\AbstractOffer
-     */
-    abstract protected function createOffer();
-
-    /**
-     * Produces an XML file and writes to $this->settings->getOutputFile()
-     */
-    protected function generateFile()
-    {
-        static::assertTrue((new Generator($this->settings))->generate(
-            $this->shopInfo,
-            $this->currencies,
-            $this->categories,
-            $this->createOffers(),
-            $this->deliveries
-        ));
-    }
-
-    /**
-     * Test generation
-     */
-    protected function runGeneratorTest()
-    {
-        $this->generateFile();
-        $this->validateFileWithDtd();
-    }
-
-    /**
-     * @return array
-     */
-    protected function createOffers()
+    protected function createOffers(): array
     {
         $offers = [];
-        foreach (\range(1, 2) as $id) {
+
+        foreach (range(1, 2) as $id) {
             $offers[] = $this
                 ->createOffer()
                 ->setId($id)
@@ -118,11 +53,11 @@ abstract class AbstractGeneratorTest extends \PHPUnit_Framework_TestCase
                 ->setPurchasePrice($this->faker->numberBetween(1, 9999))
                 ->setWeight($this->faker->numberBetween(1, 9999))
                 ->setDimensions(
-                    $this->faker->randomFloat(3, 0),
-                    $this->faker->randomFloat(3, 0),
-                    $this->faker->randomFloat(3, 0)
+                    $this->faker->randomFloat(3),
+                    $this->faker->randomFloat(3),
+                    $this->faker->randomFloat(3)
                 )
-                ->setCurrencyId('UAH')
+                ->setCurrencyId(CurrencyEnum::UAH)
                 ->setCategoryId($id)
                 ->setDelivery($this->faker->boolean)
                 ->setLocalDeliveryCost($this->faker->numberBetween(1, 9999))
@@ -135,25 +70,107 @@ abstract class AbstractGeneratorTest extends \PHPUnit_Framework_TestCase
                 ->setMarketCategory($this->faker->word)
                 ->setCpa($this->faker->numberBetween(0, 1))
                 ->setBarcodes([$this->faker->ean13, $this->faker->ean13])
-                ->setAutoDiscount($this->faker->boolean)
-            ;
+                ->setAutoDiscount($this->faker->boolean);
         }
 
         return $offers;
     }
 
     /**
+     * Produces an XML file and writes to $this->settings->getOutputFile()
+     */
+    protected function generateFile(): void
+    {
+        static::assertTrue(
+            (new Generator())
+                ->setSettings($this->settings)
+                ->generate(
+                    $this->shopInfo,
+                    $this->currencies,
+                    $this->categories,
+                    $this->createOffers(),
+                    $this->deliveries
+                )
+        );
+    }
+
+    protected function runGeneratorTest(): void
+    {
+        $this->generateFile();
+        $this->validateFileWithDtd();
+    }
+
+    protected function setUp(): void
+    {
+        $this->faker = Faker::create();
+
+        $this->settings = $this->createSettings();
+        $this->shopInfo = $this->createShopInfo();
+        $this->currencies = $this->createCurrencies();
+        $this->categories = $this->createCategories();
+        $this->deliveries = $this->createDeliveries();
+    }
+
+    private function createCategories(): array
+    {
+        $categories = [];
+        $categories[] = new Category(id: 1, name: $this->faker->name);
+        $categories[] = new Category(id: 2, name: $this->faker->name, parentId: 1);
+
+        return $categories;
+    }
+
+    private function createCurrencies(): array
+    {
+        $currencies = [];
+        $currencies[] = new Currency(id: CurrencyEnum::UAH, rate: 1);
+
+        return $currencies;
+    }
+
+    private function createDeliveries(): array
+    {
+        $deliveries = [];
+        $deliveries[] = new Delivery(cost: 1, days: 2);
+        $deliveries[] = new Delivery(cost: 2, days: 1, orderBefore: 14);
+
+        return $deliveries;
+    }
+
+    private function createSettings(): Settings
+    {
+        return (new Settings())
+            ->setOutputFile(tempnam(sys_get_temp_dir(), 'YMLGeneratorTest'))
+            ->setEncoding('utf-8');
+    }
+
+    private function createShopInfo(): ShopInfo
+    {
+        return new ShopInfo(
+            company: $this->faker->company,
+            name: $this->faker->name,
+            url: $this->faker->url,
+            agency: $this->faker->name,
+            autoDiscount: $this->faker->boolean,
+            email: $this->faker->email,
+            platform: $this->faker->name,
+            version: $this->faker->numberBetween(1, 999)
+        );
+    }
+
+    /**
      * Validate yml file using dtd
      */
-    private function validateFileWithDtd()
+    private function validateFileWithDtd(): void
     {
-        $systemId = 'data://text/plain;base64,'.\base64_encode(\file_get_contents(__DIR__.'/dtd/'.$this->offerType.'.dtd'));
+        $base64Encode = base64_encode(file_get_contents(__DIR__.'/dtd/'.$this->offerType.'.dtd'));
+        $systemId = 'data://text/plain;base64,'.$base64Encode;
         $root = 'yml_catalog';
 
-        $ymlFile = new \DOMDocument();
-        $ymlFile->loadXML(\file_get_contents($this->settings->getOutputFile()));
+        $ymlFile = new DOMDocument();
+        $ymlFile->loadXML(file_get_contents($this->settings->getOutputFile()));
 
-        $creator = new \DOMImplementation();
+        $creator = new DOMImplementation();
         $ymlFileWithDtd = $creator->createDocument(null, null, $creator->createDocumentType($root, null, $systemId));
         $ymlFileWithDtd->encoding = 'windows-1251';
 
@@ -163,90 +180,11 @@ abstract class AbstractGeneratorTest extends \PHPUnit_Framework_TestCase
 
         try {
             static::assertTrue($ymlFileWithDtd->validate());
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             echo $exception->getMessage();
             static::fail('YML file not valid');
         }
     }
 
-    /**
-     * @return Settings
-     */
-    private function createSettings()
-    {
-        return (new Settings())
-            ->setOutputFile(\tempnam(\sys_get_temp_dir(), 'YMLGeneratorTest'))
-            ->setEncoding('utf-8')
-            ->setIndentString("\t")
-        ;
-    }
-
-    /**
-     * @return ShopInfo
-     */
-    private function createShopInfo()
-    {
-        return (new ShopInfo())
-            ->setName($this->faker->name)
-            ->setCompany($this->faker->company)
-            ->setUrl($this->faker->url)
-            ->setPlatform($this->faker->name)
-            ->setVersion($this->faker->numberBetween(1, 999))
-            ->setAgency($this->faker->name)
-            ->setEmail($this->faker->email)
-            ->setAutoDiscount($this->faker->boolean)
-        ;
-    }
-
-    /**
-     * @return array
-     */
-    private function createCurrencies()
-    {
-        $currencies = [];
-        $currencies[] = (new Currency())
-            ->setId('UAH')
-            ->setRate(1)
-        ;
-
-        return $currencies;
-    }
-
-    /**
-     * @return array
-     */
-    private function createCategories()
-    {
-        $categories = [];
-        $categories[] = (new Category())
-            ->setId(1)
-            ->setName($this->faker->name)
-        ;
-
-        $categories[] = (new Category())
-            ->setId(2)
-            ->setParentId(1)
-            ->setName($this->faker->name)
-        ;
-
-        return $categories;
-    }
-
-    /**
-     * @return array
-     */
-    private function createDeliveries()
-    {
-        $deliveries = [];
-        $deliveries[] = (new Delivery())
-            ->setCost(1)
-            ->setDays(2);
-
-        $deliveries[] = (new Delivery())
-            ->setCost(2)
-            ->setDays(1)
-            ->setOrderBefore(14);
-
-        return $deliveries;
-    }
+    abstract protected function createOffer(): OfferInterface;
 }

@@ -1,321 +1,220 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
 
-/**
- * Class OfferTour
- */
-class OfferTour extends AbstractOffer
+final class OfferTour extends AbstractOffer
 {
-    /**
-     * @var string
-     */
-    private $worldRegion;
+    private const TYPE = 'tour';
 
-    /**
-     * @var string
-     */
-    private $country;
+    private ?string $country = null;
 
-    /**
-     * @var string
-     */
-    private $region;
+    private array $dataTour = [];
 
-    /**
-     * @var int
-     */
-    private $days;
+    private int $days;
 
-    /**
-     * @var array
-     */
-    private $dataTour;
+    private ?float $hotelStars = null;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $included;
 
-    /**
-     * @var string
-     */
-    private $hotelStars;
+    private ?string $meal = null;
 
-    /**
-     * @var string
-     */
-    private $room;
+    private ?string $region = null;
 
-    /**
-     * @var string
-     */
-    private $meal;
+    private ?string $room = null;
 
-    /**
-     * @var string
-     */
-    private $included;
+    private string $transport;
 
-    /**
-     * @var string
-     */
-    private $transport;
+    private ?string $worldRegion = null;
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'tour';
-    }
+    public function __construct(
+        int          $categoryId,
+        CurrencyEnum $currencyId,
+        int          $days,
+        string       $id,
+        string       $included,
+        string       $name,
+        float        $price,
+        string       $transport,
+        string       $url
+    ) {
+        parent::__construct($categoryId, $currencyId, $id, $name, $price, $url);
 
-    /**
-     * @return string
-     */
-    public function getWorldRegion()
-    {
-        return $this->worldRegion;
-    }
-
-    /**
-     * @param string $worldRegion
-     *
-     * @return $this
-     */
-    public function setWorldRegion($worldRegion)
-    {
-        $this->worldRegion = $worldRegion;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param string $country
-     *
-     * @return $this
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRegion()
-    {
-        return $this->region;
-    }
-
-    /**
-     * @param string $region
-     *
-     * @return $this
-     */
-    public function setRegion($region)
-    {
-        $this->region = $region;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDays()
-    {
-        return $this->days;
-    }
-
-    /**
-     * @param int $days
-     *
-     * @return $this
-     */
-    public function setDays($days)
-    {
         $this->days = $days;
-
-        return $this;
+        $this->included = $included;
+        $this->transport = $transport;
     }
 
-    /**
-     * @return array
-     */
-    public function getDataTour()
-    {
-        return $this->dataTour;
-    }
-
-    /**
-     * @param string $dataTour
-     *
-     * @return $this
-     */
-    public function addDataTour($dataTour)
+    public function addDataTour(string $dataTour): self
     {
         $this->dataTour[] = $dataTour;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getCountry(): ?string
     {
-        return $this->name;
+        return $this->country;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
+    public function setCountry(?string $country): self
     {
-        $this->name = $name;
+        $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHotelStars()
+    public function getDataTour(): array
+    {
+        return $this->dataTour;
+    }
+
+    public function setDataTour(array $dataTour): self
+    {
+        $this->dataTour = $dataTour;
+
+        return $this;
+    }
+
+    public function getDays(): int
+    {
+        return $this->days;
+    }
+
+    public function setDays(int $days): self
+    {
+        $this->days = $days;
+
+        return $this;
+    }
+
+    public function getHotelStars(): ?float
     {
         return $this->hotelStars;
     }
 
-    /**
-     * @param string $hotelStars
-     *
-     * @return $this
-     */
-    public function setHotelStars($hotelStars)
+    public function setHotelStars(?float $hotelStars): self
     {
         $this->hotelStars = $hotelStars;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRoom()
-    {
-        return $this->room;
-    }
-
-    /**
-     * @param string $room
-     *
-     * @return $this
-     */
-    public function setRoom($room)
-    {
-        $this->room = $room;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMeal()
-    {
-        return $this->meal;
-    }
-
-    /**
-     * @param string $meal
-     *
-     * @return $this
-     */
-    public function setMeal($meal)
-    {
-        $this->meal = $meal;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIncluded()
+    public function getIncluded(): string
     {
         return $this->included;
     }
 
-    /**
-     * @param string $included
-     *
-     * @return $this
-     */
-    public function setIncluded($included)
+    public function setIncluded(string $included): self
     {
         $this->included = $included;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTransport()
+    public function getMeal(): ?string
+    {
+        return $this->meal;
+    }
+
+    public function setMeal(?string $meal): self
+    {
+        $this->meal = $meal;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): self
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getRoom(): ?string
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?string $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
+    public function getTransport(): string
     {
         return $this->transport;
     }
 
-    /**
-     * @param string $transport
-     *
-     * @return $this
-     */
-    public function setTransport($transport)
+    public function setTransport(string $transport): self
     {
         $this->transport = $transport;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    public function getType(): string
     {
-        return [
-            'worldRegion' => $this->getWorldRegion(),
-            'country' => $this->getCountry(),
-            'region' => $this->getRegion(),
-            'days' => $this->getDays(),
-            'dataTour' => $this->getDataTour(),
-            'name' => $this->getName(),
-            'hotel_stars' => $this->getHotelStars(),
-            'room' => $this->getRoom(),
-            'meal' => $this->getMeal(),
-            'included' => $this->getIncluded(),
+        return self::TYPE;
+    }
+
+    public function getWorldRegion(): ?string
+    {
+        return $this->worldRegion;
+    }
+
+    public function setWorldRegion(?string $worldRegion): self
+    {
+        $this->worldRegion = $worldRegion;
+
+        return $this;
+    }
+
+    protected function getOptions(): array
+    {
+        $data = [
+            'days'      => $this->getDays(),
+            'name'      => $this->getName(),
+            'included'  => $this->getIncluded(),
             'transport' => $this->getTransport(),
         ];
+
+        if ($this->getWorldRegion() !== null) {
+            $data['worldRegion'] = $this->getWorldRegion();
+        }
+
+        if ($this->getCountry() !== null) {
+            $data['country'] = $this->getCountry();
+        }
+
+        if ($this->getRegion() !== null) {
+            $data['region'] = $this->getRegion();
+        }
+
+        if (count($this->getDataTour())) {
+            $data['dataTour'] = $this->getDataTour();
+        }
+
+        if ($this->getHotelStars() !== null) {
+            $data['hotel_stars'] = $this->getHotelStars();
+        }
+
+        if ($this->getRoom() !== null) {
+            $data['room'] = $this->getRoom();
+        }
+
+        if ($this->getMeal() !== null) {
+            $data['meal'] = $this->getMeal();
+        }
+
+        return $data;
     }
 }

@@ -1,0 +1,4 @@
+services:
+    defaults:
+        autowire: true
+        autoconfigure: true

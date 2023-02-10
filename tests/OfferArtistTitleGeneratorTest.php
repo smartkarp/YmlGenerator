@@ -1,42 +1,29 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-namespace Bukashk0zzz\YmlGenerator\Tests;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferArtistTitle;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 
-use Bukashk0zzz\YmlGenerator\Model\Offer\OfferArtistTitle;
-
-/**
- * Generator test
- */
-class OfferArtistTitleGeneratorTest extends AbstractGeneratorTest
+final class OfferArtistTitleGeneratorTest extends AbstractGeneratorTest
 {
-    /**
-     * Test generate
-     */
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->offerType = 'ArtistTitle';
         $this->runGeneratorTest();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function createOffer()
+    protected function createOffer(): OfferInterface
     {
-        return (new OfferArtistTitle())
-            ->setArtist($this->faker->name)
-            ->setTitle($this->faker->name)
-            ->setYear($this->faker->numberBetween(1, 9999))
-            ->setMedia($this->faker->name)
-        ;
+        return new OfferArtistTitle(
+            categoryId: $this->faker->numberBetween(),
+            currencyId: CurrencyEnum::RUB,
+            id: $this->faker->name,
+            name: $this->faker->name,
+            price: $this->faker->randomFloat(2),
+            title: $this->faker->name,
+            url: $this->faker->url
+        );
     }
 }

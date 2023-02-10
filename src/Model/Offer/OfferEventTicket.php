@@ -1,165 +1,106 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
 
-/**
- * Class OfferEventTicket
- */
-class OfferEventTicket extends AbstractOffer
+final class OfferEventTicket extends AbstractOffer
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private const TYPE = 'event-ticket';
 
-    /**
-     * @var string
-     */
-    private $place;
+    private string $date;
 
-    /**
-     * @var string
-     */
-    private $date;
+    private ?bool $kids = null;
 
-    /**
-     * @var int
-     */
-    private $premiere;
+    private string $place;
 
-    /**
-     * @var int
-     */
-    private $kids;
+    private ?bool $premiere = null;
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'event-ticket';
-    }
+    public function __construct(
+        int          $categoryId,
+        CurrencyEnum $currencyId,
+        string       $date,
+        string       $id,
+        string       $name,
+        string       $place,
+        float        $price,
+        string       $url
+    ) {
+        parent::__construct($categoryId, $currencyId, $id, $name, $price, $url);
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlace()
-    {
-        return $this->place;
-    }
-
-    /**
-     * @param string $place
-     *
-     * @return $this
-     */
-    public function setPlace($place)
-    {
+        $this->date = $date;
         $this->place = $place;
-
-        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->date;
     }
 
-    /**
-     * @param string $date
-     *
-     * @return $this
-     */
-    public function setDate($date)
+    public function setDate(string $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getPremiere()
-    {
-        return $this->premiere;
-    }
-
-    /**
-     * @param int $premiere
-     *
-     * @return $this
-     */
-    public function setPremiere($premiere)
-    {
-        $this->premiere = $premiere;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getKids()
+    public function getKids(): ?bool
     {
         return $this->kids;
     }
 
-    /**
-     * @param int $kids
-     *
-     * @return $this
-     */
-    public function setKids($kids)
+    public function setKids(?bool $kids): self
     {
         $this->kids = $kids;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    public function getPlace(): string
     {
-        return [
-            'name' => $this->getName(),
+        return $this->place;
+    }
+
+    public function setPlace(string $place): self
+    {
+        $this->place = $place;
+
+        return $this;
+    }
+
+    public function getPremiere(): ?bool
+    {
+        return $this->premiere;
+    }
+
+    public function setPremiere(?bool $premiere): self
+    {
+        $this->premiere = $premiere;
+
+        return $this;
+    }
+
+    public function getType(): string
+    {
+        return self::TYPE;
+    }
+
+    protected function getOptions(): array
+    {
+        $data = [
+            'name'  => $this->getName(),
             'place' => $this->getPlace(),
-            'date' => $this->getDate(),
-            'is_premiere' => $this->getPremiere(),
-            'is_kids' => $this->getKids(),
+            'date'  => $this->getDate(),
         ];
+
+        if ($this->getPremiere() !== null) {
+            $data['is_premiere'] = $this->getPremiere();
+        }
+
+        if ($this->getKids() !== null) {
+            $data['is_kids'] = $this->getKids();
+        }
+
+        return $data;
     }
 }

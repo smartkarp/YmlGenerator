@@ -1,141 +1,120 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
+use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
 
-/**
- * Class OfferCustom
- */
-class OfferCustom extends AbstractOffer implements OfferGroupAwareInterface
+final class OfferCustom extends AbstractOffer implements OfferGroupAwareInterface
 {
     use OfferGroupTrait;
 
-    /**
-     * @var string
-     */
-    private $typePrefix;
+    private const TYPE = 'vendor.model';
 
-    /**
-     * @var string
-     */
-    private $vendor;
+    private string $model;
 
-    /**
-     * @var string
-     */
-    private $vendorCode;
+    private string $typePrefix;
 
-    /**
-     * @var string
-     */
-    private $model;
+    private string $vendor;
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'vendor.model';
-    }
+    private ?string $vendorCode = null;
 
-    /**
-     * @return string
-     */
-    public function getTypePrefix()
-    {
-        return $this->typePrefix;
-    }
+    public function __construct(
+        int          $categoryId,
+        CurrencyEnum $currencyId,
+        string       $id,
+        string       $model,
+        string       $name,
+        float        $price,
+        string       $typePrefix,
+        string       $url,
+        string       $vendor,
+    ) {
+        parent::__construct($categoryId, $currencyId, $id, $name, $price, $url);
 
-    /**
-     * @param string $typePrefix
-     *
-     * @return $this
-     */
-    public function setTypePrefix($typePrefix)
-    {
+        $this->model = $model;
         $this->typePrefix = $typePrefix;
-
-        return $this;
+        $this->vendor = $vendor;
     }
 
-    /**
-     * @return string
-     */
-    public function getModel()
+    public
+    function getModel(): string
     {
         return $this->model;
     }
 
-    /**
-     * @param string $model
-     *
-     * @return $this
-     */
-    public function setModel($model)
-    {
+    public
+    function setModel(
+        string $model
+    ): self {
         $this->model = $model;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVendor()
+    public
+    function getType(): string
+    {
+        return self::TYPE;
+    }
+
+    public
+    function getTypePrefix(): string
+    {
+        return $this->typePrefix;
+    }
+
+    public
+    function setTypePrefix(
+        string $typePrefix
+    ): self {
+        $this->typePrefix = $typePrefix;
+
+        return $this;
+    }
+
+    public
+    function getVendor(): string
     {
         return $this->vendor;
     }
 
-    /**
-     * @param string $vendor
-     *
-     * @return $this
-     */
-    public function setVendor($vendor)
-    {
+    public
+    function setVendor(
+        string $vendor
+    ): self {
         $this->vendor = $vendor;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVendorCode()
+    public
+    function getVendorCode(): ?string
     {
         return $this->vendorCode;
     }
 
-    /**
-     * @param string $vendorCode
-     *
-     * @return $this
-     */
-    public function setVendorCode($vendorCode)
-    {
+    public
+    function setVendorCode(
+        ?string $vendorCode
+    ): self {
         $this->vendorCode = $vendorCode;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    protected
+    function getOptions(): array
     {
-        return [
+        $data = [
             'typePrefix' => $this->getTypePrefix(),
-            'vendor' => $this->getVendor(),
-            'vendorCode' => $this->getVendorCode(),
-            'model' => $this->getModel(),
+            'vendor'     => $this->getVendor(),
+            'model'      => $this->getModel(),
         ];
+
+        if ($this->getVendorCode() !== null) {
+            $data['vendorCode'] = $this->getVendorCode();
+        }
+
+        return $data;
     }
 }

@@ -1,99 +1,62 @@
 <?php
 
-/*
- * This file is part of the Bukashk0zzzYmlGenerator
- *
- * (c) Denis Golubovskiy <bukashk0zzz@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer;
 
-namespace Bukashk0zzz\YmlGenerator\Model\Offer;
-
-/**
- * Class OfferBook
- */
-class OfferBook extends AbstractOffer
+final class OfferBook extends AbstractOffer
 {
     use OfferBookTrait;
 
-    /**
-     * @var string
-     */
-    private $binding;
+    private const TYPE = 'book';
 
-    /**
-     * @var int
-     */
-    private $pageExtent;
+    private ?string $binding = null;
 
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'book';
-    }
+    private ?int $pageExtent = null;
 
-    /**
-     * @return string
-     */
-    public function getBinding()
+    public function getBinding(): ?string
     {
         return $this->binding;
     }
 
-    /**
-     * @param string $binding
-     *
-     * @return $this
-     */
-    public function setBinding($binding)
+    public function setBinding(?string $binding): self
     {
         $this->binding = $binding;
 
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getPageExtent()
+    public function getPageExtent(): ?int
     {
         return $this->pageExtent;
     }
 
-    /**
-     * @param int $pageExtent
-     *
-     * @return $this
-     */
-    public function setPageExtent($pageExtent)
+    public function setPageExtent(?int $pageExtent): self
     {
         $this->pageExtent = $pageExtent;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    protected function getOptions()
+    public function getType(): string
     {
-        return [
-            'author' => $this->getAuthor(),
-            'name' => $this->getName(),
-            'publisher' => $this->getPublisher(),
-            'series' => $this->getSeries(),
-            'year' => $this->getYear(),
-            'ISBN' => $this->getISBN(),
-            'volume' => $this->getVolume(),
-            'part' => $this->getPart(),
-            'language' => $this->getLanguage(),
-            'binding' => $this->getBinding(),
-            'page_extent' => $this->getPageExtent(),
-            'table_of_contents' => $this->getTableOfContents(),
-        ];
+        return self::TYPE;
+    }
+
+    protected function getOptions(): array
+    {
+        $data = $this->getTraitOptions();
+
+        if ($this->getBinding() !== null) {
+            $data['binding'] = $this->getBinding();
+        }
+
+        if ($this->getPageExtent() !== null) {
+            $data['page_extent'] = $this->getPageExtent();
+        }
+
+        if ($this->getTableOfContents() !== null) {
+            $data['table_of_contents'] = $this->getTableOfContents();
+        }
+
+        return $data;
     }
 }
