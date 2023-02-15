@@ -2,6 +2,8 @@
 
 namespace Smartkarp\Bundle\YmlGeneratorBundle\Service;
 
+use Exception;
+use RuntimeException;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Category;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Currency;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Delivery;
@@ -9,10 +11,8 @@ use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferCondition;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferGroupAwareInterface;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferParam;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\Set;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
-use Exception;
-use LogicException;
-use RuntimeException;
 use XMLWriter;
 use function copy;
 use function count;
@@ -43,7 +43,8 @@ final class Generator
         array    $currencies,
         array    $categories,
         array    $offers,
-        array    $deliveries = []
+        array    $deliveries = [],
+        array    $sets = [],
     ): bool {
         try {
             $this->addHeader();
@@ -54,6 +55,10 @@ final class Generator
 
             if (count($deliveries) !== 0) {
                 $this->addDeliveries($deliveries);
+            }
+
+            if (count($sets) !== 0) {
+                $this->addSets($sets);
             }
 
             $this->addOffers($offers);
@@ -83,7 +88,7 @@ final class Generator
         $this->settings = $settings;
 
         if ($this->settings->getOutputFile() !== null && $this->settings->getReturnResultYMLString()) {
-            throw new LogicException('Only one destination need to be used ReturnResultYMLString or OutputFile.');
+            throw new RuntimeException('Only one destination need to be used ReturnResultYMLString or OutputFile.');
         }
 
         if ($this->settings->getReturnResultYMLString()) {
@@ -180,6 +185,22 @@ final class Generator
         $this->writer->fullEndElement();
     }
 
+    /**
+     * Adds <sets> element.
+     */
+    private function addSets(array $sets): void
+    {
+        $this->writer->startElement('sets');
+
+        foreach ($sets as $set) {
+            if ($set instanceof Set) {
+                $this->addSet($set);
+            }
+        }
+
+        $this->writer->fullEndElement();
+    }
+
     private function addDelivery(Delivery $delivery): void
     {
         $this->writer->startElement('option');
@@ -192,6 +213,23 @@ final class Generator
 
         $this->writer->endElement();
     }
+
+    private function addSet(Set $set): void
+    {
+        $this->writer->startElement('set');
+        $this->writer->writeAttribute('id', $set->getId());
+
+        $this->writer->startElement('name');
+        $this->writer->text($set->getName());
+        $this->writer->fullEndElement();
+
+        $this->writer->startElement('url');
+        $this->writer->text($set->getUrl());
+        $this->writer->fullEndElement();
+
+        $this->writer->fullEndElement();
+    }
+
 
     private function addFooter(): void
     {

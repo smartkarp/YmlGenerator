@@ -1,7 +1,7 @@
 <!ELEMENT yml_catalog (shop)*>
 <!ATTLIST yml_catalog
         date CDATA #REQUIRED>
-<!ELEMENT shop (name|company|url|platform|version|agency|email|enable_auto_discounts|currencies|categories|delivery-options|offers)*>
+<!ELEMENT shop (name|company|url|platform|version|agency|email|enable_auto_discounts|currencies|categories|delivery-options|sets|offers)*>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT company (#PCDATA)>
 <!ELEMENT url (#PCDATA)>
@@ -18,20 +18,22 @@
 <!ELEMENT categories (category)*>
 <!ELEMENT category (#PCDATA)>
 <!ATTLIST category
-        id CDATA #REQUIRED
-        parentId CDATA #IMPLIED>
+        id CDATA #REQUIRED>
 <!ELEMENT delivery-options (option)*>
 <!ELEMENT option (#PCDATA)>
 <!ATTLIST option
         cost CDATA #REQUIRED
         days CDATA #REQUIRED
         order-before CDATA #IMPLIED>
+<!ELEMENT sets (set)*>
+<!ELEMENT set (name|url)*>
+<!ATTLIST set
+        id CDATA #REQUIRED>
 <!ELEMENT offers (offer)*>
-<!ELEMENT offer (url|price|currencyId|categoryId|name|oldprice|purchase_price|market_category|delivery|local_delivery_cost|weight|dimensions|enable_auto_discounts|days|included|transport|worldRegion|country|region|dataTour|hotel_stars|room|meal|description|sales_notes|manufacturer_warranty|downloadable|adult|cpa|barcode)*>
+<!ELEMENT offer (url|price|currencyId|categoryId|name|oldprice|purchase_price|market_category|delivery|local_delivery_cost|weight|dimensions|enable_auto_discounts|set-ids|description|sales_notes|manufacturer_warranty|downloadable|adult|cpa|barcode)*>
 <!ATTLIST offer
         available CDATA #REQUIRED
-        id CDATA #REQUIRED
-        type CDATA #REQUIRED>
+        id CDATA #REQUIRED>
 <!ELEMENT price (#PCDATA)>
 <!ELEMENT currencyId (#PCDATA)>
 <!ELEMENT categoryId (#PCDATA)>
@@ -42,16 +44,7 @@
 <!ELEMENT local_delivery_cost (#PCDATA)>
 <!ELEMENT weight (#PCDATA)>
 <!ELEMENT dimensions (#PCDATA)>
-<!ELEMENT days (#PCDATA)>
-<!ELEMENT included (#PCDATA)>
-<!ELEMENT transport (#PCDATA)>
-<!ELEMENT worldRegion (#PCDATA)>
-<!ELEMENT country (#PCDATA)>
-<!ELEMENT region (#PCDATA)>
-<!ELEMENT dataTour (#PCDATA)>
-<!ELEMENT hotel_stars (#PCDATA)>
-<!ELEMENT room (#PCDATA)>
-<!ELEMENT meal (#PCDATA)>
+<!ELEMENT set-ids (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT sales_notes (#PCDATA)>
 <!ELEMENT manufacturer_warranty (#PCDATA)>

@@ -2,13 +2,14 @@
 
 namespace Smartkarp\Bundle\YmlGeneratorBundle\Tests;
 
-use Smartkarp\Bundle\YmlGeneratorBundle\Service\Generator;
-use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
-use Smartkarp\Bundle\YmlGeneratorBundle\Service\Settings;
 use Faker\Factory as Faker;
 use Faker\Generator as FakerGenerator;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
+use Smartkarp\Bundle\YmlGeneratorBundle\Service\Generator;
+use Smartkarp\Bundle\YmlGeneratorBundle\Service\Settings;
+use ValueError;
 use function ob_get_clean;
 use function ob_start;
 
@@ -18,7 +19,7 @@ final class GeneratorTest extends TestCase
 
     public function testExceptionForIncompatibleAnnotations(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ValueError::class);
 
         (new Generator())
             ->setSettings((new Settings())->setOutputFile(''))

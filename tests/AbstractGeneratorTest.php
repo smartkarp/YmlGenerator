@@ -9,12 +9,12 @@ use Faker\Factory as Faker;
 use Faker\Generator as FakerGenerator;
 use PHPUnit\Framework\TestCase;
 use Smartkarp\Bundle\YmlGeneratorBundle\Enum\CurrencyEnum;
-use Smartkarp\Bundle\YmlGeneratorBundle\Service\Generator;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Category;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Currency;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Delivery;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\Offer\OfferInterface;
 use Smartkarp\Bundle\YmlGeneratorBundle\Model\ShopInfo;
+use Smartkarp\Bundle\YmlGeneratorBundle\Service\Generator;
 use Smartkarp\Bundle\YmlGeneratorBundle\Service\Settings;
 use function base64_encode;
 use function file_get_contents;
@@ -34,9 +34,25 @@ abstract class AbstractGeneratorTest extends TestCase
 
     protected string $offerType;
 
+    protected array $sets;
+
     protected Settings $settings;
 
     protected ShopInfo $shopInfo;
+
+    protected function createCategories(): array
+    {
+        $categories = [];
+        $categories[] = new Category(id: 1, name: $this->faker->name);
+        $categories[] = new Category(id: 2, name: $this->faker->name, parentId: 1);
+
+        return $categories;
+    }
+
+    protected function createSets(): array
+    {
+        return [];
+    }
 
     protected function createOffers(): array
     {
@@ -89,7 +105,8 @@ abstract class AbstractGeneratorTest extends TestCase
                     $this->currencies,
                     $this->categories,
                     $this->createOffers(),
-                    $this->deliveries
+                    $this->deliveries,
+                    $this->sets,
                 )
         );
     }
@@ -109,15 +126,7 @@ abstract class AbstractGeneratorTest extends TestCase
         $this->currencies = $this->createCurrencies();
         $this->categories = $this->createCategories();
         $this->deliveries = $this->createDeliveries();
-    }
-
-    private function createCategories(): array
-    {
-        $categories = [];
-        $categories[] = new Category(id: 1, name: $this->faker->name);
-        $categories[] = new Category(id: 2, name: $this->faker->name, parentId: 1);
-
-        return $categories;
+        $this->sets = $this->createSets();
     }
 
     private function createCurrencies(): array
